@@ -191,7 +191,8 @@ def run_premium_generation(target_countries, num_leads, quality_threshold):
         generation_status['progress'] = 10
         generation_status['message'] = 'Loading scraping modules...'
         
-        from src.scraper_free_unlimited import search_places_free
+        # Use SerpAPI scraper for reliable results
+        from src.scraper import search_places
         from src.lead_quality_filter import filter_serious_clients_only
         from src.queries import CITIES, CATEGORIES
         from src.filters import remove_duplicates
@@ -235,8 +236,8 @@ def run_premium_generation(target_countries, num_leads, quality_threshold):
             logger.info(f"[{i+1}/{len(all_queries)}] Searching: {query}")
             
             try:
-                # FREE scraping
-                results = search_places_free(query, max_results=5)
+                # Use SerpAPI for reliable scraping
+                results = search_places(query)
                 
                 if not results:
                     continue
