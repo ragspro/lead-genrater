@@ -1,8 +1,8 @@
 """Google Maps scraper using SerpAPI - REAL DATA!"""
 
 import logging
-from serpapi import GoogleSearch
 import time
+import serpapi
 
 logger = logging.getLogger(__name__)
 
@@ -31,9 +31,9 @@ def search_places(query: str, api_key: str) -> list[dict]:
             "api_key": api_key
         }
         
-        # Make API request
-        search = GoogleSearch(params)
-        data = search.get_dict()
+        # Make API request using new serpapi client
+        client = serpapi.Client(api_key=api_key)
+        data = client.search(params)
         
         # Extract local results
         local_results = data.get("local_results", [])
