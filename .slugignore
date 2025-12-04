@@ -1,0 +1,53 @@
+# Exclude from Render deployment to speed up build
+
+# Test files
+tests/
+test_*.py
+*_test.py
+FINAL_TEST.py
+
+# Audit and documentation files
+audit_system.py
+audit_report.json
+SYSTEM_AUDIT_FIXES.md
+IMPROVEMENTS_TODO.md
+FINAL_IMPROVEMENTS.md
+FINAL_SYSTEM_STATUS.md
+
+# Spec files
+.kiro/
+
+# Documentation
+*.md
+!README.md
+
+# Git files
+.git/
+.gitignore
+
+# IDE files
+.vscode/
+.DS_Store
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.hypothesis/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Local data
+data/
+logs/
+*.log
+
+# Scripts
+push_to_github.sh
+deploy.sh
+START_DASHBOARD.sh
