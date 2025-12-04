@@ -48,14 +48,20 @@ def load_premium_leads():
 
 def save_premium_leads(leads, append=False):
     """
-    Save premium leads to JSON file.
+    Save premium leads to JSON file with date-wise history.
     
     Args:
         leads: List of leads to save
         append: If True, append to existing leads. If False, overwrite.
     """
     os.makedirs("data", exist_ok=True)
+    os.makedirs("data/history", exist_ok=True)
+    
     json_path = "data/premium_leads.json"
+    
+    # Also save to date-wise history file
+    today = datetime.now().strftime('%Y-%m-%d')
+    history_path = f"data/history/leads_{today}.json"
     
     try:
         # If append mode, load existing leads first
@@ -80,11 +86,21 @@ def save_premium_leads(leads, append=False):
             except Exception as e:
                 logger.error(f"Error loading existing leads: {e}")
         
-        # Save leads
+        # Save leads to main file
         with open(json_path, 'w', encoding='utf-8') as f:
             json.dump(leads, f, indent=2, ensure_ascii=False)
         
-        logger.info(f"Saved {len(leads)} leads to {json_path}")
+        # Save to date-wise history file
+        history_data = {
+            'date': today,
+            'timestamp': datetime.now().isoformat(),
+            'total_leads': len(leads),
+            'leads': leads
+        }
+        with open(history_path, 'w', encoding='utf-8') as f:
+            json.dump(history_data, f, indent=2, ensure_ascii=False)
+        
+        logger.info(f"Saved {len(leads)} leads to {json_path} and {history_path}")
         return True
     except Exception as e:
         logger.error(f"Error saving leads: {e}")
@@ -688,6 +704,104 @@ def update_lead():
             'success': False,
             'error': str(e)
         })
+
+
+@app.route('/api/history')
+def get_history():
+    """Get all available history dates."""
+    try:
+        history_dir = "data/history"
+        if not os.path.exists(history_dir):
+            return jsonify({'dates': []})
+        
+        # Get all history files
+        files = [f for f in os.listdir(history_dir) if f.startswith('leads_') and f.endswith('.json')]
+        
+        # Extract dates and get summary
+        history = []
+        for file in sorted(files, reverse=True):  # Most recent first
+            date_str = file.replace('leads_', '').replace('.json', '')
+            file_path = os.path.join(history_dir, file)
+            
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    history.append({
+                        'date': date_str,
+                        'total_leads': data.get('total_leads', len(data.get('leads', []))),
+                        'timestamp': data.get('timestamp', '')
+                    })
+            except Exception as e:
+                logger.error(f"Error reading history file {file}: {e}")
+        
+        return jsonify({'history': history})
+    except Exception as e:
+        logger.error(f"Error getting history: {e}")
+        return jsonify({'history': [], 'error': str(e)})
+
+
+@app.route('/api/history/<date>')
+def get_history_by_date(date):
+    """Get leads for a specific date."""
+    try:
+        history_path = f"data/history/leads_{date}.json"
+        
+        if not os.path.exists(history_path):
+            return jsonify({
+                'success': False,
+                'error': 'No data found for this date'
+            })
+        
+        with open(history_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        
+        return jsonify({
+            'success': True,
+            'date': date,
+            'total_leads': data.get('total_leads', len(data.get('leads', []))),
+            'timestamp': data.get('timestamp', ''),
+            'leads': data.get('leads', [])
+        })
+    except Exception as e:
+        logger.error(f"Error getting history for date {date}: {e}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        })
+
+
+@app.route('/api/history/all')
+def get_all_history():
+    """Get all leads from all dates combined."""
+    try:
+        history_dir = "data/history"
+        if not os.path.exists(history_dir):
+            return jsonify({'total_leads': 0, 'leads': []})
+        
+        all_leads = []
+        files = [f for f in os.listdir(history_dir) if f.startswith('leads_') and f.endswith('.json')]
+        
+        for file in sorted(files, reverse=True):
+            file_path = os.path.join(history_dir, file)
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    leads = data.get('leads', [])
+                    # Add date to each lead
+                    date_str = file.replace('leads_', '').replace('.json', '')
+                    for lead in leads:
+                        lead['generated_date'] = date_str
+                    all_leads.extend(leads)
+            except Exception as e:
+                logger.error(f"Error reading {file}: {e}")
+        
+        return jsonify({
+            'total_leads': len(all_leads),
+            'leads': all_leads
+        })
+    except Exception as e:
+        logger.error(f"Error getting all history: {e}")
+        return jsonify({'total_leads': 0, 'leads': [], 'error': str(e)})
 
 
 if __name__ == '__main__':

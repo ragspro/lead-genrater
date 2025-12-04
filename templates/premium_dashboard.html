@@ -132,6 +132,17 @@
             cursor: not-allowed;
         }
 
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
+        }
+
         .btn-success {
             background: #10b981;
             color: white;
@@ -470,6 +481,10 @@
             <button class="btn btn-primary" id="generate-btn" onclick="startGeneration()">
                 🚀 Generate Premium Leads
             </button>
+            
+            <button class="btn btn-secondary" onclick="viewHistory()" style="margin-left: 10px;">
+                📅 View Lead History
+            </button>
 
             <div class="progress-bar" id="progress-bar">
                 <div class="progress-fill" id="progress-fill">0%</div>
@@ -480,7 +495,12 @@
 
         <!-- Leads Section -->
         <div class="leads-section">
-            <h2>💼 Premium Leads</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2>💼 Premium Leads</h2>
+                <button class="btn btn-secondary" onclick="showAllHistory()" style="font-size: 0.9em;">
+                    📊 Total Leads: <span id="total-leads-count">0</span>
+                </button>
+            </div>
             
             <input type="text" class="search-box" id="search-box" placeholder="🔍 Search by business name, type, or location...">
 
@@ -891,6 +911,130 @@
                 console.error('Error checking status:', error);
             }
         }
+
+        // History Functions
+        async function viewHistory() {
+            try {
+                const response = await fetch('/api/history');
+                const data = await response.json();
+                
+                if (!data.history || data.history.length === 0) {
+                    alert('No history available yet. Generate some leads first!');
+                    return;
+                }
+                
+                // Create history modal
+                let html = `
+                    <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; align-items: center; justify-content: center;" onclick="this.remove()">
+                        <div style="background: white; padding: 30px; border-radius: 15px; max-width: 600px; max-height: 80vh; overflow-y: auto;" onclick="event.stopPropagation()">
+                            <h2 style="color: #667eea; margin-bottom: 20px;">📅 Lead Generation History</h2>
+                            <div style="margin-bottom: 20px;">
+                `;
+                
+                data.history.forEach(item => {
+                    html += `
+                        <div style="padding: 15px; border: 2px solid #e0e0e0; border-radius: 10px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s;" 
+                             onclick="loadHistoryDate('${item.date}')"
+                             onmouseover="this.style.borderColor='#667eea'; this.style.background='#f8f9ff'"
+                             onmouseout="this.style.borderColor='#e0e0e0'; this.style.background='white'">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong style="color: #333; font-size: 1.1em;">${item.date}</strong>
+                                    <p style="color: #666; margin-top: 5px; font-size: 0.9em;">${item.timestamp ? new Date(item.timestamp).toLocaleString() : ''}</p>
+                                </div>
+                                <div style="background: #667eea; color: white; padding: 8px 15px; border-radius: 20px; font-weight: bold;">
+                                    ${item.total_leads} leads
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `
+                            </div>
+                            <button onclick="this.closest('div[style*=fixed]').remove()" style="width: 100%; padding: 12px; background: #667eea; color: white; border: none; border-radius: 8px; font-size: 1em; cursor: pointer;">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.insertAdjacentHTML('beforeend', html);
+            } catch (error) {
+                console.error('Error loading history:', error);
+                alert('Error loading history: ' + error.message);
+            }
+        }
+
+        async function loadHistoryDate(date) {
+            try {
+                const response = await fetch(`/api/history/${date}`);
+                const data = await response.json();
+                
+                if (!data.success) {
+                    alert('Error loading data for this date');
+                    return;
+                }
+                
+                // Close history modal
+                document.querySelector('div[style*="position: fixed"]')?.remove();
+                
+                // Display leads
+                allLeads = data.leads;
+                displayLeads(allLeads);
+                
+                // Update status message
+                document.getElementById('status-message').innerHTML = `
+                    <div class="status-message status-success">
+                        ✅ Loaded ${data.total_leads} leads from ${date}
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error loading date:', error);
+                alert('Error loading leads: ' + error.message);
+            }
+        }
+
+        async function showAllHistory() {
+            try {
+                const response = await fetch('/api/history/all');
+                const data = await response.json();
+                
+                if (data.total_leads === 0) {
+                    alert('No leads in history yet. Generate some leads first!');
+                    return;
+                }
+                
+                // Display all leads
+                allLeads = data.leads;
+                displayLeads(allLeads);
+                
+                // Update status message
+                document.getElementById('status-message').innerHTML = `
+                    <div class="status-message status-success">
+                        ✅ Loaded ${data.total_leads} total leads from all dates
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error loading all history:', error);
+                alert('Error loading history: ' + error.message);
+            }
+        }
+
+        // Update total leads count on page load
+        async function updateTotalLeadsCount() {
+            try {
+                const response = await fetch('/api/history/all');
+                const data = await response.json();
+                document.getElementById('total-leads-count').textContent = data.total_leads || 0;
+            } catch (error) {
+                console.error('Error updating total count:', error);
+            }
+        }
+
+        // Call on page load
+        updateTotalLeadsCount();
+        setInterval(updateTotalLeadsCount, 30000); // Update every 30 seconds
     </script>
 </body>
 </html>
