@@ -86,3 +86,29 @@ def transform_place(place: dict, query: str) -> dict:
     }
     
     return lead
+
+
+def remove_duplicates(leads: list) -> list:
+    """
+    Remove duplicate leads based on business name and address.
+    
+    Args:
+        leads: List of lead dictionaries
+    
+    Returns:
+        List of unique leads
+    """
+    seen = set()
+    unique_leads = []
+    
+    for lead in leads:
+        # Create unique key from title and address
+        title = lead.get('title', lead.get('business_name', '')).lower().strip()
+        address = lead.get('address', '').lower().strip()
+        key = (title, address)
+        
+        if key not in seen and title:  # Only add if not seen and has title
+            seen.add(key)
+            unique_leads.append(lead)
+    
+    return unique_leads
