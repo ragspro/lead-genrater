@@ -17,9 +17,9 @@ class GeminiAI:
         logger.info("Gemini AI initialized (FREE) - using gemini-1.5-flash")
     
     def generate_cold_email(self, business_name: str, business_type: str, 
-                           city: str, rating: float, reviews: int) -> str:
+                           city: str, rating: float, reviews: int, owner_name: str = None) -> str:
         """
-        Generate personalized cold email using Gemini AI.
+        Generate personalized cold email using professional template.
         
         Args:
             business_name: Name of the business
@@ -27,11 +27,41 @@ class GeminiAI:
             city: City location
             rating: Google rating
             reviews: Number of reviews
+            owner_name: Owner name (optional, defaults to "Team")
         
         Returns:
             Personalized email content
         """
-        prompt = f"""You are Raghav Shah from RagsPro.com - India's leading digital development agency. Write a HIGHLY PERSUASIVE, NATURAL cold email that will make the client say YES.
+        # Use owner name or default
+        owner = owner_name if owner_name else f"{business_name} Team"
+        
+        prompt = f"""Generate a professional, SHORT cold email using this EXACT template structure:
+
+Hi {owner},
+
+I came across {business_name} while researching {business_type} companies in {city}.
+
+We help businesses increase inbound clients consistently without paid advertising.
+
+I quickly reviewed your online presence and noticed a few growth gaps that could convert into more leads.
+
+Would you like me to send you a short growth breakdown for {business_name}?
+
+Regards,
+Raghav Shah
+Founder – RagsPro
+www.ragspro.com
++918700048490
+raghav@ragspro.com
+
+CRITICAL RULES:
+1. Keep it SHORT and professional (max 100 words)
+2. Use the EXACT template structure above
+3. Don't add extra paragraphs or fluff
+4. Keep the tone consultative, not salesy
+5. Focus on "growth gaps" and "growth breakdown"
+6. End with the question about growth breakdown
+7. Include all contact details at end
 
 Business Details:
 - Name: {business_name}

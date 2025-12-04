@@ -1,0 +1,45 @@
+{
+  "timestamp": "2025-12-04T16:03:49.258181",
+  "syntax_errors": [],
+  "import_issues": [
+    "test_free_system.py - Cannot resolve import: playwright",
+    "src/scraper_free_unlimited.py - Cannot resolve import: selenium",
+    "src/whatsapp_bot.py - Cannot resolve import: selenium",
+    "src/whatsapp_bot.py - Cannot resolve import: webdriver_manager"
+  ],
+  "error_handling_gaps": [
+    "audit_system.py - Function 'save_report' lacks error handling",
+    "tests/test_dedupe.py - Function 'test_save_creates_directory' lacks error handling",
+    "src/whatsapp_sender.py - Function 'create_whatsapp_sender' lacks error handling",
+    "src/whatsapp_sender.py - Function 'send_bulk_messages' lacks error handling",
+    "src/main_free.py - Function 'save_ai_content' lacks error handling",
+    "src/scraper_free.py - Function 'search_places_free' lacks error handling",
+    "src/main_complete.py - Function 'save_ai_content' lacks error handling",
+    "src/main_complete.py - Function 'save_whatsapp_conversations' lacks error handling",
+    "src/email_sender.py - Function 'create_gmail_sender' lacks error handling",
+    "src/email_sender.py - Function 'send_bulk_emails' lacks error handling"
+  ],
+  "duplicate_code": [
+    "Function 'index' found in multiple files: dashboard.py and dashboard_premium.py",
+    "Function 'get_leads' found in multiple files: dashboard.py and dashboard_premium.py",
+    "Function 'get_stats' found in multiple files: dashboard.py and dashboard_premium.py",
+    "Function 'generate_leads' found in multiple files: dashboard.py and dashboard_premium.py",
+    "Function 'get_status' found in multiple files: dashboard.py and dashboard_premium.py",
+    "Function 'search_leads' found in multiple files: dashboard.py and dashboard_premium.py",
+    "Function 'main' found in multiple files: test_free_system.py and audit_system.py",
+    "Function 'get_config' found in multiple files: dashboard.py and src/config.py",
+    "Function 'main' found in multiple files: test_free_system.py and src/main_premium_clients.py",
+    "Function 'search_places_free' found in multiple files: src/scraper_free_unlimited.py and src/scraper_free.py",
+    "Function 'setup_logging' found in multiple files: src/main_free.py and src/main_complete.py",
+    "Function 'save_ai_content' found in multiple files: src/main_free.py and src/main_complete.py",
+    "Function 'send_message' found in multiple files: src/whatsapp_sender.py and src/whatsapp_bot.py",
+    "Function 'send_email' found in multiple files: dashboard_premium.py and src/email_sender.py",
+    "Function 'setup_logging' found in multiple files: src/main_free.py and src/main.py"
+  ],
+  "integration_issues": [],
+  "recommendations": [
+    "Resolve 4 import issues - install missing packages or fix import paths",
+    "Add error handling to 10 critical functions",
+    "Refactor 15 duplicate functions into shared utilities"
+  ]
+}

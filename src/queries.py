@@ -62,12 +62,16 @@ CITIES = [
     "Tokyo, Japan",
     "Seoul, South Korea",
     
-    # India - Lower Tier (But high volume - ₹50000-₹500000 projects)
-    "Mumbai, India",
-    "Bangalore, India",
+    # India - Good Tier (High volume - ₹50000-₹500000 projects)
     "Delhi, India",
     "Gurgaon, India",
+    "Noida, India",
+    "Mumbai, India",
+    "Bangalore, India",
     "Pune, India",
+    "Hyderabad, India",
+    "Chennai, India",
+    "Kolkata, India",
 ]
 
 # HIGH-VALUE BUSINESS CATEGORIES (Businesses that pay MAXIMUM for tech services)
