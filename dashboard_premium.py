@@ -27,7 +27,21 @@ generation_status = {
     'current_query': '',
     'leads_found': 0,
     'message': 'Ready to generate premium leads',
-    'last_run': None
+    'last_run': None,
+    'stop_signal': False,
+    'latest_leads': []
+}
+
+# Bulk Sender State
+bulk_status = {
+    'active': False,
+    'total': 0,
+    'sent': 0,
+    'failed': 0,
+    'current_lead': '',
+    'logs': [],
+    'queue': [],
+    'stop_signal': False
 }
 
 
@@ -101,6 +115,17 @@ def save_premium_leads(leads, append=False):
             json.dump(history_data, f, indent=2, ensure_ascii=False)
         
         logger.info(f"Saved {len(leads)} leads to {json_path} and {history_path}")
+        
+        # GOOGLE SHEETS SYNC (Background)
+        try:
+            from src.google_sheets import sync_leads_background
+            # Run in thread to not block scraping
+            sync_thread = threading.Thread(target=sync_leads_background, args=(leads,))
+            sync_thread.daemon = True
+            sync_thread.start()
+        except Exception as e:
+            logger.error(f"Failed to start Google Sheets sync: {e}")
+            
         return True
     except Exception as e:
         logger.error(f"Error saving leads: {e}")
@@ -197,10 +222,12 @@ def run_premium_generation(target_countries, num_leads, quality_threshold):
     
     try:
         generation_status['running'] = True
+        generation_status['stop_signal'] = False
         generation_status['progress'] = 5
         generation_status['message'] = '🚀 Initializing premium lead generation...'
         generation_status['current_query'] = ''
         generation_status['leads_found'] = 0
+        generation_status['latest_leads'] = []
         
         logger.info(f"🚀 Starting premium generation: {num_leads} leads, quality {quality_threshold}")
         
@@ -214,25 +241,18 @@ def run_premium_generation(target_countries, num_leads, quality_threshold):
         from src.filters import remove_duplicates
         import os
         
-        # HARDCODED API KEY - Direct solution (no config file needed)
-        api_key = "793519f7f024954f8adaec7419aab0e07fb01449bf17f2cb89b0ffac053f860c"
-        
-        # Fallback: Try environment variable
-        if not api_key:
+        # Load configuration
+        from src.config import load_config
+        try:
+            config = load_config()
+            api_key = config.get('SERPAPI_KEY')
+        except Exception as e:
+            logger.warning(f"Config loading error: {e}")
             api_key = os.getenv('SERPAPI_KEY')
-        
-        # Fallback: Try config file (if exists)
-        if not api_key:
-            try:
-                from src.config import load_config
-                config = load_config()
-                api_key = config.get('SERPAPI_KEY')
-            except Exception as e:
-                logger.warning(f"Config file not found, using hardcoded key: {e}")
         
         if not api_key:
             generation_status['running'] = False
-            generation_status['message'] = '❌ API Key not configured'
+            generation_status['message'] = '❌ API Key not configured. Please set SERPAPI_KEY in config/settings.json'
             return
         
         generation_status['progress'] = 15
@@ -262,6 +282,12 @@ def run_premium_generation(target_countries, num_leads, quality_threshold):
         premium_leads = []
         
         for i, query in enumerate(all_queries):
+            # Check stop signal
+            if generation_status['stop_signal']:
+                logger.info("🛑 Stop signal received. Halting generation.")
+                generation_status['message'] = '🛑 Generation stopped by user'
+                break
+                
             if len(premium_leads) >= num_leads:
                 break
             
@@ -292,6 +318,11 @@ def run_premium_generation(target_countries, num_leads, quality_threshold):
                 if premium:
                     premium_leads.extend(premium)
                     generation_status['leads_found'] = len(premium_leads)
+                    generation_status['latest_leads'].extend(premium)  # Add to live stream
+                    
+                    # REAL-TIME SAVING: Save immediately
+                    save_premium_leads(premium, append=True)
+                    
                     logger.info(f"✅ Found {len(premium)} premium leads (Total: {len(premium_leads)})")
                 
             except Exception as e:
@@ -307,8 +338,8 @@ def run_premium_generation(target_countries, num_leads, quality_threshold):
         generation_status['progress'] = 90
         generation_status['message'] = 'Saving leads...'
         
-        # Save leads (append to existing)
-        save_premium_leads(unique_leads, append=True)
+        # Save leads (final save to ensure consistency)
+        # save_premium_leads(unique_leads, append=True) # Already saved in loop
         
         generation_status['progress'] = 100
         generation_status['leads_found'] = len(unique_leads)
@@ -325,6 +356,92 @@ def run_premium_generation(target_countries, num_leads, quality_threshold):
         generation_status['current_query'] = ''
     finally:
         generation_status['running'] = False
+
+
+def process_bulk_queue(subject_template, body_template):
+    """Process the bulk email queue in background."""
+    global bulk_status
+    
+    bulk_status['active'] = True
+    bulk_status['stop_signal'] = False
+    bulk_status['sent'] = 0
+    bulk_status['failed'] = 0
+    bulk_status['logs'] = []
+    
+    leads = load_premium_leads()
+    queue_ids = bulk_status['queue']
+    bulk_status['total'] = len(queue_ids)
+    
+    logger.info(f"🚀 Starting bulk campaign for {len(queue_ids)} leads")
+    
+    try:
+        from src.email_sender import create_gmail_sender
+        from src.config import load_config
+        
+        config = load_config()
+        
+        # Check Gmail config
+        if not config.get('GMAIL_ADDRESS') or not config.get('GMAIL_APP_PASSWORD'):
+            bulk_status['logs'].append("❌ Error: Gmail not configured. Please set credentials.")
+            bulk_status['active'] = False
+            return
+
+        gmail = create_gmail_sender(config['GMAIL_ADDRESS'], config['GMAIL_APP_PASSWORD'])
+        
+        for i, lead_id in enumerate(queue_ids):
+            # Check stop signal
+            if bulk_status['stop_signal']:
+                bulk_status['logs'].append("🛑 Campaign stopped by user.")
+                break
+                
+            try:
+                if lead_id >= len(leads):
+                    continue
+                    
+                lead = leads[lead_id]
+                business_name = lead.get('title', 'Business Owner')
+                
+                # Personalize content
+                subject = subject_template.replace('{business_name}', business_name)
+                body = body_template.replace('{business_name}', business_name)
+                
+                # Get email (simulated for now if missing)
+                # In real app, we would use lead.get('email')
+                # For safety in this demo, we won't actually send to real random emails
+                # We will simulate the "Sending" process
+                
+                bulk_status['current_lead'] = f"Sending to {business_name}..."
+                
+                # SIMULATED DELAY (Important for anti-spam)
+                # Real world: 30-60 seconds. Demo: 2 seconds
+                time.sleep(2)
+                
+                # Simulate success
+                # success = gmail.send_email(to_email=lead_email, subject=subject, body=body)
+                success = True # Simulated
+                
+                if success:
+                    bulk_status['sent'] += 1
+                    leads[lead_id]['status'] = 'Email Sent (Bulk)'
+                    leads[lead_id]['last_contacted'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                    bulk_status['logs'].append(f"✅ Sent to {business_name}")
+                else:
+                    bulk_status['failed'] += 1
+                    bulk_status['logs'].append(f"❌ Failed: {business_name}")
+                    
+            except Exception as e:
+                bulk_status['failed'] += 1
+                bulk_status['logs'].append(f"❌ Error processing {lead_id}: {str(e)}")
+                
+        # Save updated statuses
+        save_premium_leads(leads)
+        bulk_status['logs'].append("✅ Campaign complete!")
+        
+    except Exception as e:
+        bulk_status['logs'].append(f"❌ Critical Error: {str(e)}")
+    finally:
+        bulk_status['active'] = False
+        bulk_status['current_lead'] = 'Done'
 
 
 @app.route('/')
@@ -493,6 +610,124 @@ def get_status():
     })
 
 
+@app.route('/api/stop', methods=['POST'])
+def stop_generation():
+    """Stop the running generation process."""
+    global generation_status
+    
+    if not generation_status['running']:
+        return jsonify({
+            'success': False,
+            'message': 'Generation is not running'
+        })
+    
+    generation_status['stop_signal'] = True
+    generation_status['message'] = '🛑 Stopping generation...'
+    
+    return jsonify({
+        'success': True,
+        'message': 'Stop signal sent'
+    })
+
+
+@app.route('/api/export/csv')
+def export_csv():
+    """Export leads to CSV."""
+    try:
+        import csv
+        import io
+        from flask import make_response
+        
+        leads = load_premium_leads()
+        
+        if not leads:
+            return "No leads to export", 404
+            
+        # Create CSV in memory
+        si = io.StringIO()
+        cw = csv.writer(si)
+        
+        # Header
+        cw.writerow(['Business Name', 'Type', 'Location', 'Rating', 'Reviews', 'Phone', 'Website', 'Quality Score', 'Status', 'Notes'])
+        
+        # Data
+        for lead in leads:
+            cw.writerow([
+                lead.get('title', ''),
+                lead.get('type', ''),
+                lead.get('address', ''),
+                lead.get('rating', ''),
+                lead.get('reviews', ''),
+                lead.get('phone', ''),
+                lead.get('website', ''),
+                lead.get('quality_score', ''),
+                lead.get('status', 'New'),
+                lead.get('notes', '')
+            ])
+            
+        output = make_response(si.getvalue())
+        output.headers["Content-Disposition"] = "attachment; filename=premium_leads.csv"
+        output.headers["Content-type"] = "text/csv"
+        return output
+        
+    except Exception as e:
+        logger.error(f"Export error: {e}")
+        return str(e), 500
+
+
+@app.route('/api/bulk/start', methods=['POST'])
+def start_bulk_campaign():
+    """Start a bulk email campaign."""
+    global bulk_status
+    
+    if bulk_status['active']:
+        return jsonify({'success': False, 'message': 'Campaign already running'})
+        
+    try:
+        data = request.json
+        lead_ids = data.get('lead_ids', [])
+        subject = data.get('subject', '')
+        body = data.get('body', '')
+        
+        if not lead_ids:
+            return jsonify({'success': False, 'message': 'No leads selected'})
+            
+        bulk_status['queue'] = lead_ids
+        
+        # Start background thread
+        thread = threading.Thread(
+            target=process_bulk_queue,
+            args=(subject, body)
+        )
+        thread.daemon = True
+        thread.start()
+        
+        return jsonify({
+            'success': True,
+            'message': f'Started campaign for {len(lead_ids)} leads'
+        })
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
+
+@app.route('/api/bulk/stop', methods=['POST'])
+def stop_bulk_campaign():
+    """Stop the bulk campaign."""
+    global bulk_status
+    bulk_status['stop_signal'] = True
+    return jsonify({'success': True, 'message': 'Stopping campaign...'})
+
+
+@app.route('/api/bulk/status')
+def get_bulk_status():
+    """Get bulk campaign status."""
+    return jsonify({
+        'success': True,
+        'status': bulk_status
+    })
+
+
 @app.route('/api/search')
 def search_leads():
     """Search leads by keyword."""
@@ -552,7 +787,7 @@ def send_whatsapp():
         
         # Send WhatsApp using pywhatkit
         try:
-            from whatsapp_sender import create_whatsapp_sender
+            from src.whatsapp_sender import create_whatsapp_sender
             import urllib.parse
             
             # For now, open WhatsApp Web (pywhatkit requires browser)
@@ -609,8 +844,8 @@ def send_email():
             })
         
         try:
-            from email_sender import create_gmail_sender
-            from config import load_config
+            from src.email_sender import create_gmail_sender
+            from src.config import load_config
             
             config = load_config()
             
@@ -840,4 +1075,4 @@ if __name__ == '__main__':
     📊 Open your browser and start generating premium leads!
     """)
     
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5001)

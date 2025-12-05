@@ -76,6 +76,13 @@ class LeadQualityScorer:
         # E-commerce (always optimizing)
         "e-commerce", "online store", "DTC brand",
         "marketplace", "retail tech",
+        
+        # 💰 HIGH TICKET SERVICE BUSINESSES (New additions)
+        "solar", "hvac", "roofing", "construction",
+        "luxury car", "dealership", "plastic surgeon",
+        "dental implant", "cosmetic dentist",
+        "logistics", "manufacturing", "industrial",
+        "real estate developer", "interior design",
     ]
     
     # Business categories with LOW budgets
@@ -133,8 +140,10 @@ class LeadQualityScorer:
             score += 10
         elif rating >= 4.0:
             score += 5
-        elif rating < 3.0 and rating > 0:
-            score -= 10
+        elif rating < 3.5 and rating > 0:
+            # 🎯 Low rating = Opportunity to pitch "Reputation Management" or "New Website"
+            score += 10 
+            logger.info(f"🎯 Low rating opportunity: {title} ({rating} stars)")
         
         # 5. Review count (indicates established business) (+15 points max)
         if reviews >= 500:
@@ -148,10 +157,12 @@ class LeadQualityScorer:
         
         # 6. Has website (+10 points - shows they invest in online presence)
         if website and website.strip():
-            score += 10
+            score += 5  # Reduced from 10 (we want those WITHOUT websites too)
         else:
-            # No website is actually GOOD for us (they need our services!)
-            score += 5
+            # 🎯 RAGSPRO GOLD MINE: No website = HUGE Opportunity!
+            # These clients NEED us the most.
+            score += 25  # Massive boost for no website
+            logger.info(f"🎯 Opportunity found: {title} has NO WEBSITE (+25 points)")
         
         # 7. Has phone (+5 points - shows they're reachable)
         if phone and phone.strip():

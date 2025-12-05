@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,7 +28,7 @@
             background: white;
             padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             margin-bottom: 30px;
         }
 
@@ -53,7 +54,7 @@
             background: white;
             padding: 25px;
             border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
 
@@ -72,7 +73,7 @@
             background: white;
             padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             margin-bottom: 30px;
         }
 
@@ -182,7 +183,7 @@
             background: white;
             padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         .leads-section h2 {
@@ -345,8 +346,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         @keyframes slideIn {
@@ -354,6 +360,7 @@
                 transform: translateX(400px);
                 opacity: 0;
             }
+
             to {
                 transform: translateX(0);
                 opacity: 1;
@@ -365,6 +372,7 @@
                 transform: translateX(0);
                 opacity: 1;
             }
+
             to {
                 transform: translateX(400px);
                 opacity: 0;
@@ -418,6 +426,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <!-- Header -->
@@ -440,82 +449,116 @@
                 <h3 id="stat-rating">0</h3>
                 <p>Avg Rating</p>
             </div>
-            <div class="stat-card">
-                <h3 id="stat-last-run">Never</h3>
-                <p>Last Generation</p>
-            </div>
+        </div>
+        <div class="stat-card">
+            <h3 id="stat-last-run">Never</h3>
+            <p>Last Generation</p>
+        </div>
+        <div class="stat-card" style="background: #f0fdf4; border: 2px solid #10b981;">
+            <h3 style="font-size: 1.5em; margin-bottom: 5px;">✅ Active</h3>
+            <p style="color: #065f46;">Google Sheets Sync</p>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+        <h2>🚀 Generate Premium Leads</h2>
+
+        <div class="form-group">
+            <label>Target Markets:</label>
+            <select id="target-markets" multiple style="height: 100px;">
+                <option value="">All International Markets (Recommended)</option>
+                <option value="USA">🇺🇸 USA (Highest Paying)</option>
+                <option value="UK">🇬🇧 UK (High Paying)</option>
+                <option value="UAE">🇦🇪 UAE (Very High Paying)</option>
+                <option value="Canada">🇨🇦 Canada (High Paying)</option>
+                <option value="Australia">🇦🇺 Australia (High Paying)</option>
+                <option value="France">🇫🇷 France (Good Paying)</option>
+                <option value="Germany">🇩🇪 Germany (Good Paying)</option>
+                <option value="Singapore">🇸🇬 Singapore (High Paying)</option>
+            </select>
+            <small>Hold Ctrl/Cmd to select multiple. Leave empty for all markets.</small>
         </div>
 
-        <!-- Controls -->
-        <div class="controls">
-            <h2>🚀 Generate Premium Leads</h2>
-            
-            <div class="form-group">
-                <label>Target Markets:</label>
-                <select id="target-markets" multiple style="height: 100px;">
-                    <option value="">All International Markets (Recommended)</option>
-                    <option value="USA">🇺🇸 USA (Highest Paying)</option>
-                    <option value="UK">🇬🇧 UK (High Paying)</option>
-                    <option value="UAE">🇦🇪 UAE (Very High Paying)</option>
-                    <option value="Canada">🇨🇦 Canada (High Paying)</option>
-                    <option value="Australia">🇦🇺 Australia (High Paying)</option>
-                    <option value="France">🇫🇷 France (Good Paying)</option>
-                    <option value="Germany">🇩🇪 Germany (Good Paying)</option>
-                    <option value="Singapore">🇸🇬 Singapore (High Paying)</option>
-                </select>
-                <small>Hold Ctrl/Cmd to select multiple. Leave empty for all markets.</small>
-            </div>
+        <div class="form-group">
+            <label>Number of Leads:</label>
+            <input type="number" id="num-leads" value="50" min="10" max="500">
+            <small>Recommended: 50-100 for best results</small>
+        </div>
 
-            <div class="form-group">
-                <label>Number of Leads:</label>
-                <input type="number" id="num-leads" value="50" min="10" max="500">
-                <small>Recommended: 50-100 for best results</small>
-            </div>
+        <div class="form-group">
+            <label>Quality Threshold (0-100):</label>
+            <input type="number" id="quality-threshold" value="70" min="50" max="100">
+            <small>Higher = fewer but better quality leads. Recommended: 70</small>
+        </div>
 
-            <div class="form-group">
-                <label>Quality Threshold (0-100):</label>
-                <input type="number" id="quality-threshold" value="70" min="50" max="100">
-                <small>Higher = fewer but better quality leads. Recommended: 70</small>
-            </div>
+        <button class="btn btn-primary" id="generate-btn" onclick="startGeneration()">
+            🚀 Generate Premium Leads
+        </button>
 
-            <button class="btn btn-primary" id="generate-btn" onclick="startGeneration()">
-                🚀 Generate Premium Leads
+        <button class="btn btn-danger" id="stop-btn" onclick="stopGeneration()"
+            style="display: none; background: #ef4444; color: white;">
+            🛑 Stop Generation
+        </button>
+
+        <button class="btn btn-secondary" onclick="viewHistory()" style="margin-left: 10px;">
+            📅 View Lead History
+        </button>
+
+        <div class="export-buttons" style="margin-top: 15px; display: flex; gap: 10px;">
+            <a href="/api/export/csv" class="btn btn-secondary" style="background: #10b981; border: none;">
+                📊 Download CSV
+            </a>
+            <button onclick="window.print()" class="btn btn-secondary" style="background: #6b7280; border: none;">
+                🖨️ Print / Save PDF
             </button>
-            
-            <button class="btn btn-secondary" onclick="viewHistory()" style="margin-left: 10px;">
-                📅 View Lead History
+        </div>
+
+        <!-- Bulk Action Bar (Floating) -->
+        <div id="bulk-action-bar"
+            style="position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1e293b; padding: 15px 30px; border-radius: 50px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); display: none; align-items: center; gap: 20px; z-index: 1000; animation: slideUp 0.3s ease-out;">
+            <span style="color: white; font-weight: bold;" id="selected-count">0 Selected</span>
+            <button class="btn btn-success" onclick="openBulkModal()" style="border-radius: 25px; padding: 10px 25px;">
+                🚀 Start Bulk Campaign
             </button>
-
-            <div class="progress-bar" id="progress-bar">
-                <div class="progress-fill" id="progress-fill">0%</div>
-            </div>
-
-            <div id="status-message"></div>
+            <button class="btn btn-secondary" onclick="clearSelection()"
+                style="border-radius: 25px; padding: 10px 15px; background: rgba(255,255,255,0.2);">
+                ❌
+            </button>
         </div>
 
-        <!-- Leads Section -->
-        <div class="leads-section">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2>💼 Premium Leads</h2>
-                <button class="btn btn-secondary" onclick="showAllHistory()" style="font-size: 0.9em;">
-                    📊 Total Leads: <span id="total-leads-count">0</span>
-                </button>
-            </div>
-            
-            <input type="text" class="search-box" id="search-box" placeholder="🔍 Search by business name, type, or location...">
+        <div class="progress-bar" id="progress-bar">
+            <div class="progress-fill" id="progress-fill">0%</div>
+        </div>
 
-            <div id="leads-container">
-                <div class="empty-state">
-                    <h3>No leads yet</h3>
-                    <p>Click "Generate Premium Leads" above to start finding high-paying clients!</p>
-                </div>
+        <div id="status-message"></div>
+    </div>
+
+    <!-- Leads Section -->
+    <div class="leads-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2>💼 Premium Leads</h2>
+            <button class="btn btn-secondary" onclick="showAllHistory()" style="font-size: 0.9em;">
+                📊 Total Leads: <span id="total-leads-count">0</span>
+            </button>
+        </div>
+
+        <input type="text" class="search-box" id="search-box"
+            placeholder="🔍 Search by business name, type, or location...">
+
+        <div id="leads-container">
+            <div class="empty-state">
+                <h3>No leads yet</h3>
+                <p>Click "Generate Premium Leads" above to start finding high-paying clients!</p>
             </div>
         </div>
+    </div>
     </div>
 
     <script>
         let allLeads = [];
         let statusCheckInterval = null;
+        let isGenerating = false;
 
         // Load stats on page load
         window.addEventListener('load', () => {
@@ -526,7 +569,7 @@
         // Search functionality
         document.getElementById('search-box').addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase();
-            displayLeads(allLeads.filter(lead => 
+            displayLeads(allLeads.filter(lead =>
                 lead.title.toLowerCase().includes(query) ||
                 lead.type.toLowerCase().includes(query) ||
                 lead.address.toLowerCase().includes(query)
@@ -537,7 +580,7 @@
             try {
                 const response = await fetch('/api/stats');
                 const data = await response.json();
-                
+
                 if (data.success) {
                     document.getElementById('stat-total').textContent = data.stats.total_leads;
                     document.getElementById('stat-quality').textContent = data.stats.avg_quality + '/100';
@@ -553,10 +596,10 @@
             try {
                 const container = document.getElementById('leads-container');
                 container.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading leads...</p></div>';
-                
+
                 const response = await fetch('/api/leads');
                 const data = await response.json();
-                
+
                 if (data.success) {
                     allLeads = data.leads;
                     displayLeads(allLeads);
@@ -565,14 +608,15 @@
                 }
             } catch (error) {
                 console.error('Error loading leads:', error);
-                document.getElementById('leads-container').innerHTML = 
-                    '<div class="empty-state"><h3>Error loading leads</h3></div>';
+                // Don't wipe data on error, just show toast
+                showNotification('⚠️ Connection lost. Retrying...', 'error');
+                setTimeout(loadLeads, 5000); // Retry in 5s
             }
         }
 
         function displayLeads(leads) {
             const container = document.getElementById('leads-container');
-            
+
             if (leads.length === 0) {
                 container.innerHTML = '<div class="empty-state"><h3>No leads found</h3><p>Try generating some premium leads!</p></div>';
                 return;
@@ -644,7 +688,7 @@
         function showTab(index, type) {
             const lead = allLeads[index];
             const contentDiv = document.getElementById(`content-${index}`);
-            
+
             // Update content
             if (type === 'email') {
                 contentDiv.textContent = lead.ai_content?.email || 'Generating content...';
@@ -663,7 +707,7 @@
             const phone = lead.phone || '';
             const message = lead.ai_content?.whatsapp || '';
             const businessName = lead.title;
-            
+
             if (!phone) {
                 showNotification('❌ No phone number available for this lead', 'error');
                 return;
@@ -678,7 +722,7 @@
             try {
                 const response = await fetch('/api/send-whatsapp', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         lead_id: index,
                         phone: phone,
@@ -692,15 +736,15 @@
                 if (data.success) {
                     // Open WhatsApp
                     window.open(data.url, '_blank');
-                    
+
                     // Show success
                     showNotification(data.message || `✅ WhatsApp sent to ${businessName}`, 'success');
-                    
+
                     // Update lead status in UI
                     lead.status = 'WhatsApp Sent';
                     btn.textContent = '✅ Sent';
                     btn.style.background = '#10b981';
-                    
+
                     // Reload leads to show updated status
                     setTimeout(() => loadLeads(), 2000);
                 } else {
@@ -720,7 +764,7 @@
             const subject = 'Partnership Opportunity - RagsPro.com';
             const body = lead.ai_content?.email || '';
             const businessName = lead.title;
-            
+
             if (!body) {
                 showNotification('❌ No email content available', 'error');
                 return;
@@ -735,7 +779,7 @@
             try {
                 const response = await fetch('/api/send-email', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         lead_id: index,
                         email: email,
@@ -752,15 +796,15 @@
                     if (data.url) {
                         window.open(data.url, '_blank');
                     }
-                    
+
                     // Show success
                     showNotification(data.message || `✅ Email sent to ${businessName}`, 'success');
-                    
+
                     // Update lead status in UI
                     lead.status = data.status === 'sent' ? 'Email Sent' : 'Email Ready';
                     btn.textContent = data.status === 'sent' ? '✅ Sent' : '✅ Ready';
                     btn.style.background = '#10b981';
-                    
+
                     // Reload leads to show updated status
                     setTimeout(() => loadLeads(), 2000);
                 } else {
@@ -789,7 +833,7 @@
                 animation: slideIn 0.3s ease-out;
                 box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             `;
-            
+
             if (type === 'success') {
                 notification.style.background = '#10b981';
                 notification.style.color = 'white';
@@ -800,9 +844,9 @@
                 notification.style.background = '#3b82f6';
                 notification.style.color = 'white';
             }
-            
+
             document.body.appendChild(notification);
-            
+
             setTimeout(() => {
                 notification.style.animation = 'slideOut 0.3s ease-out';
                 setTimeout(() => notification.remove(), 300);
@@ -810,28 +854,34 @@
         }
 
         async function startGeneration() {
-            const btn = document.getElementById('generate-btn');
-            const progressBar = document.getElementById('progress-bar');
-            const statusDiv = document.getElementById('status-message');
-            
-            // Get form values
-            const marketsSelect = document.getElementById('target-markets');
-            const selectedOptions = Array.from(marketsSelect.selectedOptions);
-            const countries = selectedOptions.map(opt => opt.value).filter(v => v);
-            const numLeads = parseInt(document.getElementById('num-leads').value);
-            const qualityThreshold = parseFloat(document.getElementById('quality-threshold').value);
+            const countries = Array.from(document.getElementById('target-markets').selectedOptions).map(opt => opt.value);
+            const numLeads = document.getElementById('num-leads').value;
+            const qualityThreshold = document.getElementById('quality-threshold').value;
 
-            // Disable button
+            const btn = document.getElementById('generate-btn');
+            const stopBtn = document.getElementById('stop-btn');
+            const statusDiv = document.getElementById('status-message');
+            const progressBar = document.getElementById('progress-bar');
+            const progressFill = document.getElementById('progress-fill');
+
             btn.disabled = true;
-            btn.textContent = '⏳ Generating...';
+            stopBtn.style.display = 'inline-block'; // Show stop button
+            statusDiv.innerHTML = '<div class="status-message status-info">🚀 Starting generation...</div>';
             progressBar.classList.add('active');
+            progressFill.style.width = '5%';
+            progressFill.textContent = '5%';
+
+            // Clear existing leads if starting fresh
+            document.getElementById('leads-container').innerHTML = '';
+            allLeads = [];
+            isGenerating = true;
 
             try {
                 const response = await fetch('/api/generate', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        countries: countries.length > 0 ? countries : null,
+                        countries: countries,
                         num_leads: numLeads,
                         quality_threshold: qualityThreshold
                     })
@@ -840,19 +890,38 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    statusDiv.innerHTML = '<div class="status-message status-info">✅ Generation started! This may take 10-15 minutes...</div>';
-                    
-                    // Start checking status
+                    // Start polling status
                     statusCheckInterval = setInterval(checkStatus, 2000);
                 } else {
-                    throw new Error(data.message || 'Failed to start generation');
+                    statusDiv.innerHTML = `<div class="status-message status-error">❌ Error: ${data.message}</div>`;
+                    btn.disabled = false;
+                    stopBtn.style.display = 'none';
                 }
             } catch (error) {
                 console.error('Error:', error);
                 statusDiv.innerHTML = `<div class="status-message status-error">❌ Error: ${error.message}</div>`;
                 btn.disabled = false;
-                btn.textContent = '🚀 Generate Premium Leads';
-                progressBar.classList.remove('active');
+                stopBtn.style.display = 'none';
+            }
+        }
+
+        async function stopGeneration() {
+            const stopBtn = document.getElementById('stop-btn');
+            stopBtn.disabled = true;
+            stopBtn.textContent = '🛑 Stopping...';
+
+            try {
+                const response = await fetch('/api/stop', { method: 'POST' });
+                const data = await response.json();
+
+                if (data.success) {
+                    showNotification('🛑 Stop signal sent', 'info');
+                }
+            } catch (error) {
+                console.error('Error stopping:', error);
+                showNotification('❌ Error stopping generation', 'error');
+                stopBtn.disabled = false;
+                stopBtn.textContent = '🛑 Stop Generation';
             }
         }
 
@@ -860,46 +929,45 @@
             try {
                 const response = await fetch('/api/status');
                 const data = await response.json();
-                
+
                 if (data.success) {
                     const status = data.status;
                     const progressFill = document.getElementById('progress-fill');
                     const statusDiv = document.getElementById('status-message');
-                    
-                    // Update progress
-                    progressFill.style.width = status.progress + '%';
-                    progressFill.textContent = status.progress + '%';
-                    
-                    // Update message with more details
-                    let messageHtml = `<div class="status-message status-info">
-                        <strong>${status.message}</strong>`;
-                    
-                    if (status.current_query) {
-                        messageHtml += `<br><small>🔍 ${status.current_query}</small>`;
+
+                    // Update UI
+                    progressFill.style.width = `${status.progress}%`;
+                    progressFill.textContent = `${status.progress}%`;
+                    statusDiv.innerHTML = `<div class="status-message status-info">${status.message}</div>`;
+
+                    // LIVE STREAM: Add new leads if any
+                    if (status.latest_leads && status.latest_leads.length > 0) {
+                        // Filter out leads we already have
+                        const newLeads = status.latest_leads.filter(newLead =>
+                            !allLeads.some(existing =>
+                                existing.title === newLead.title &&
+                                existing.address === newLead.address
+                            )
+                        );
+
+                        if (newLeads.length > 0) {
+                            allLeads.push(...newLeads);
+                            appendLeads(newLeads); // Append only new ones
+
+                            // Update total count
+                            document.getElementById('total-leads-count').textContent = allLeads.length;
+                        }
                     }
-                    
-                    if (status.leads_found > 0) {
-                        messageHtml += `<br><small>✅ Found ${status.leads_found} premium leads so far</small>`;
-                    }
-                    
-                    messageHtml += `</div>`;
-                    statusDiv.innerHTML = messageHtml;
-                    
-                    // Check if complete
-                    if (!status.running && status.progress === 100) {
+
+                    if (!status.running) {
                         clearInterval(statusCheckInterval);
-                        
-                        // Show completion notification
-                        showNotification(`✅ Generation complete! Found ${status.leads_found} premium leads`, 'success');
-                        
-                        // Re-enable button
                         const btn = document.getElementById('generate-btn');
                         btn.disabled = false;
                         btn.textContent = '🚀 Generate Premium Leads';
-                        
+
                         // Hide progress bar
                         document.getElementById('progress-bar').classList.remove('active');
-                        
+
                         // Reload data
                         setTimeout(() => {
                             loadStats();
@@ -912,17 +980,82 @@
             }
         }
 
+        function appendLeads(newLeads) {
+            const container = document.getElementById('leads-container');
+
+            // Remove empty state if present
+            if (container.querySelector('.empty-state') || container.querySelector('.loading')) {
+                container.innerHTML = '';
+            }
+
+            const leadsHtml = newLeads.map((lead, index) => {
+                // Calculate correct index based on total leads
+                const actualIndex = allLeads.indexOf(lead);
+                return `
+                <div class="lead-card" style="animation: slideIn 0.5s ease-out;">
+                    <div class="lead-header">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <input type="checkbox" class="lead-checkbox" value="${actualIndex}" onchange="updateSelection()" style="width: 20px; height: 20px; cursor: pointer;">
+                            <div class="lead-title">
+                                <h3>
+                                    ${lead.title}
+                                    <span class="status-badge status-new">New</span>
+                                </h3>
+                                <p>${lead.type} • ${lead.address}</p>
+                            </div>
+                        </div>
+                        <div class="quality-badge ${getQualityClass(lead.quality_score)}">
+                            ${lead.quality_score}/100
+                        </div>
+                    </div>
+
+                    <div class="lead-details">
+                        <div class="detail-item">
+                            <strong>⭐ Rating:</strong> ${lead.rating || 'N/A'} (${lead.reviews || 0} reviews)
+                        </div>
+                        <div class="detail-item">
+                            <strong>📞 Phone:</strong> ${lead.phone || 'N/A'}
+                        </div>
+                        <div class="detail-item">
+                            <strong>🌐 Website:</strong> ${lead.website || 'None (Opportunity!)'}
+                        </div>
+                    </div>
+
+                    <div class="content-preview">
+                        <div class="content-tabs">
+                            <button class="tab-btn active" onclick="showTab(${actualIndex}, 'email')">📧 Email</button>
+                            <button class="tab-btn" onclick="showTab(${actualIndex}, 'whatsapp')">💬 WhatsApp</button>
+                        </div>
+                        <div class="content-body" id="content-${actualIndex}">
+                            Generating content...
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn btn-success" onclick="sendWhatsApp(${actualIndex})">
+                            💬 Send WhatsApp
+                        </button>
+                        <button class="btn btn-info" onclick="sendEmail(${actualIndex})">
+                            📧 Send Email
+                        </button>
+                    </div>
+                </div>
+            `}).join('');
+
+            container.insertAdjacentHTML('afterbegin', leadsHtml); // Add new leads at the top
+        }
+
         // History Functions
         async function viewHistory() {
             try {
                 const response = await fetch('/api/history');
                 const data = await response.json();
-                
+
                 if (!data.history || data.history.length === 0) {
                     alert('No history available yet. Generate some leads first!');
                     return;
                 }
-                
+
                 // Create history modal
                 let html = `
                     <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; align-items: center; justify-content: center;" onclick="this.remove()">
@@ -930,7 +1063,7 @@
                             <h2 style="color: #667eea; margin-bottom: 20px;">📅 Lead Generation History</h2>
                             <div style="margin-bottom: 20px;">
                 `;
-                
+
                 data.history.forEach(item => {
                     html += `
                         <div style="padding: 15px; border: 2px solid #e0e0e0; border-radius: 10px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s;" 
@@ -949,7 +1082,7 @@
                         </div>
                     `;
                 });
-                
+
                 html += `
                             </div>
                             <button onclick="this.closest('div[style*=fixed]').remove()" style="width: 100%; padding: 12px; background: #667eea; color: white; border: none; border-radius: 8px; font-size: 1em; cursor: pointer;">
@@ -958,7 +1091,7 @@
                         </div>
                     </div>
                 `;
-                
+
                 document.body.insertAdjacentHTML('beforeend', html);
             } catch (error) {
                 console.error('Error loading history:', error);
@@ -970,19 +1103,19 @@
             try {
                 const response = await fetch(`/api/history/${date}`);
                 const data = await response.json();
-                
+
                 if (!data.success) {
                     alert('Error loading data for this date');
                     return;
                 }
-                
+
                 // Close history modal
                 document.querySelector('div[style*="position: fixed"]')?.remove();
-                
+
                 // Display leads
                 allLeads = data.leads;
                 displayLeads(allLeads);
-                
+
                 // Update status message
                 document.getElementById('status-message').innerHTML = `
                     <div class="status-message status-success">
@@ -999,16 +1132,16 @@
             try {
                 const response = await fetch('/api/history/all');
                 const data = await response.json();
-                
+
                 if (data.total_leads === 0) {
                     alert('No leads in history yet. Generate some leads first!');
                     return;
                 }
-                
+
                 // Display all leads
                 allLeads = data.leads;
                 displayLeads(allLeads);
-                
+
                 // Update status message
                 document.getElementById('status-message').innerHTML = `
                     <div class="status-message status-success">
@@ -1035,6 +1168,145 @@
         // Call on page load
         updateTotalLeadsCount();
         setInterval(updateTotalLeadsCount, 30000); // Update every 30 seconds
+
+        // Bulk Selection Logic
+        let selectedLeads = new Set();
+
+        function updateSelection() {
+            const checkboxes = document.querySelectorAll('.lead-checkbox:checked');
+            selectedLeads.clear();
+            checkboxes.forEach(cb => selectedLeads.add(parseInt(cb.value)));
+
+            const bar = document.getElementById('bulk-action-bar');
+            const countSpan = document.getElementById('selected-count');
+
+            if (selectedLeads.size > 0) {
+                bar.style.display = 'flex';
+                countSpan.textContent = `${selectedLeads.size} Selected`;
+            } else {
+                bar.style.display = 'none';
+            }
+        }
+
+        function clearSelection() {
+            document.querySelectorAll('.lead-checkbox').forEach(cb => cb.checked = false);
+            updateSelection();
+        }
+
+        // Bulk Campaign Modal
+        function openBulkModal() {
+            const modalHtml = `
+                <div id="bulk-modal" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 2000; display: flex; align-items: center; justify-content: center;">
+                    <div style="background: white; padding: 30px; border-radius: 15px; width: 600px; max-width: 90%;">
+                        <h2 style="margin-bottom: 20px;">🚀 Bulk Email Campaign</h2>
+                        <p>Sending to <strong>${selectedLeads.size} leads</strong> (approx time: ${selectedLeads.size * 2 / 60} mins)</p>
+                        
+                        <div class="form-group">
+                            <label>Subject Line:</label>
+                            <input type="text" id="bulk-subject" class="form-control" value="Partnership Opportunity - {business_name}">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Email Body (Use {business_name} as placeholder):</label>
+                            <textarea id="bulk-body" class="form-control" style="height: 200px;">Hi {business_name} Team,
+
+I noticed your business has great potential but is missing some key digital features.
+
+At RagsPro.com, we help businesses like yours scale revenue by 3-5x using modern tech.
+
+Would you be open to a 10-min chat?
+
+Best,
+Raghav Shah
+Founder, RagsPro.com</textarea>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                            <button class="btn btn-secondary" onclick="document.getElementById('bulk-modal').remove()">Cancel</button>
+                            <button class="btn btn-success" onclick="startBulkCampaign()">🚀 Start Campaign</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        }
+
+        async function startBulkCampaign() {
+            const subject = document.getElementById('bulk-subject').value;
+            const body = document.getElementById('bulk-body').value;
+
+            try {
+                const response = await fetch('/api/bulk/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        lead_ids: Array.from(selectedLeads),
+                        subject: subject,
+                        body: body
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('bulk-modal').remove();
+                    showNotification('🚀 Campaign Started! Check status below.', 'success');
+
+                    // Show status monitor
+                    showBulkStatusMonitor();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to start campaign');
+            }
+        }
+
+        function showBulkStatusMonitor() {
+            const monitorHtml = `
+                <div id="bulk-monitor" style="position: fixed; bottom: 100px; right: 20px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); width: 300px; z-index: 1000;">
+                    <h4>📨 Sending Campaign...</h4>
+                    <div class="progress-bar" style="height: 10px; margin: 10px 0;">
+                        <div id="bulk-progress-fill" style="width: 0%; background: #10b981; height: 100%; transition: width 0.3s;"></div>
+                    </div>
+                    <p id="bulk-status-text" style="font-size: 0.9em; color: #666;">Initializing...</p>
+                    <div id="bulk-logs" style="height: 100px; overflow-y: auto; background: #f8f9fa; padding: 5px; font-size: 0.8em; margin-top: 10px;"></div>
+                    <button onclick="stopBulkCampaign()" class="btn btn-danger" style="width: 100%; margin-top: 10px; padding: 5px;">🛑 Stop Campaign</button>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', monitorHtml);
+
+            // Start polling
+            const interval = setInterval(async () => {
+                const response = await fetch('/api/bulk/status');
+                const data = await response.json();
+
+                if (data.success) {
+                    const status = data.status;
+
+                    // Update UI
+                    const percent = (status.sent + status.failed) / status.total * 100;
+                    document.getElementById('bulk-progress-fill').style.width = `${percent}%`;
+                    document.getElementById('bulk-status-text').textContent = `Sent: ${status.sent} | Failed: ${status.failed} | Total: ${status.total}`;
+
+                    const logsDiv = document.getElementById('bulk-logs');
+                    logsDiv.innerHTML = status.logs.map(log => `<div>${log}</div>`).join('');
+                    logsDiv.scrollTop = logsDiv.scrollHeight;
+
+                    if (!status.active) {
+                        clearInterval(interval);
+                        document.getElementById('bulk-status-text').textContent = '✅ Campaign Complete!';
+                        setTimeout(() => document.getElementById('bulk-monitor').remove(), 5000);
+                    }
+                }
+            }, 1000);
+        }
+
+        async function stopBulkCampaign() {
+            await fetch('/api/bulk/stop', { method: 'POST' });
+        }
     </script>
 </body>
+
 </html>

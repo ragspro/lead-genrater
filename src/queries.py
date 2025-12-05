@@ -179,6 +179,24 @@ CATEGORIES = [
     "architecture firm",
     "construction company",
     "home automation",
+    
+    # 💰 HIGH TICKET / SERVICE BUSINESSES (Best for RagsPro)
+    # These businesses have money but often terrible websites
+    "solar energy company",
+    "HVAC contractor",
+    "roofing company",
+    "construction company",
+    "luxury car dealership",
+    "plastic surgeon",
+    "dental implant clinic",
+    "cosmetic dentist",
+    "logistics company",
+    "manufacturing plant",
+    "industrial equipment supplier",
+    "interior design firm",
+    "real estate developer",
+    "modular kitchen dealer",
+    "luxury furniture store",
 ]
 
 

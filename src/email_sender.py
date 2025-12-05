@@ -50,10 +50,11 @@ Raghav Shah
 Founder, Ragspro.com - Software Development Agency
 
 📞 +918700048490
-📧 raghav@ragspro.com
+📧 ragsproai@gmail.com
 🌐 ragspro.com
+📅 calendly.com/ragsproai
 
-Connect:
+Connect with me:
 💼 LinkedIn: linkedin.com/in/raghavshahhh
 💻 GitHub: github.com/raghavshahhhh
 📸 Instagram: instagram.com/raghavshahhhh
@@ -65,7 +66,7 @@ Connect:
             
             # Create message
             msg = MIMEMultipart('alternative')
-            msg['From'] = f"Raghav - RagsPro.com <{self.gmail_address}>"
+            msg['From'] = f"Raghav Shah - Ragspro.com <{self.gmail_address}>"
             msg['To'] = to_email
             msg['Subject'] = subject
             
