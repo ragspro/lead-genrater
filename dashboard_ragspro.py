@@ -472,7 +472,7 @@ def get_lead_ai_content(lead_id):
         lead['ai_content'] = ai_content
         save_premium_leads(leads)
         
-        return jsonify({'success': True, 'ai_content': ai_content})
+        return jsonify({'success': True, 'ai_content': ai_content, 'lead': lead})
     except Exception as e:
         logger.error(f"Error generating AI content: {e}")
         return jsonify({'success': False, 'error': str(e)})

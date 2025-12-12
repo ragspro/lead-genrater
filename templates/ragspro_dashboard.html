@@ -1686,7 +1686,7 @@ Keep it conversational, highlight their pain points, and include a clear call-to
             
             try {
                 console.log(`🤖 Generating AI content for lead ${index}: ${lead.title}`);
-                const response = await fetch(`/api/lead/${index}`);
+                const response = await fetch(`/api/lead/${index}/ai-content`);
                 const data = await response.json();
                 
                 console.log('✅ API Response received:', data.success);
