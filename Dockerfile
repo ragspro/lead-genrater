@@ -33,15 +33,13 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 
 COPY . /app
 
-# Create necessary directories
-RUN mkdir -p /app/data /app/data/history /app/data/backups /app/logs /app/config
+# Create necessary directories (if they don't exist from COPY)
+RUN mkdir -p /app/data /app/data/history /app/data/backups /app/logs
 
-# Copy data files if they exist (for initial deployment with sample data)
-# This ensures the dashboard has data to display on first load
-COPY data/*.json /app/data/ 2>/dev/null || true
-
-# Copy config files (API keys needed for lead generation)
-COPY config/*.json /app/config/ 2>/dev/null || true
+# Note: data/ and config/ folders are already copied by "COPY . /app" above
+# This includes:
+# - data/premium_leads.json (529 leads)
+# - config/settings.json (API keys)
 
 ENV FLASK_ENV=production
 
