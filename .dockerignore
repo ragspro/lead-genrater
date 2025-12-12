@@ -56,4 +56,4 @@ data/backups/
 !deploy.sh
 
 # Config (be careful with sensitive data)
-config/settings.json
+# config/settings.json  # Commented out - we need this for API keys on Render
