@@ -33,6 +33,13 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 
 COPY . /app
 
+# Create necessary directories
+RUN mkdir -p /app/data /app/data/history /app/data/backups /app/logs
+
+# Copy data files if they exist (for initial deployment with sample data)
+# This ensures the dashboard has data to display on first load
+COPY data/*.json /app/data/ 2>/dev/null || true
+
 ENV FLASK_ENV=production
 
 # Expose port used by Render

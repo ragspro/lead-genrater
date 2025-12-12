@@ -37,12 +37,25 @@ generation_status = {
 def load_premium_leads():
     """Load premium leads from JSON file."""
     json_path = "data/premium_leads.json"
+    
+    # Ensure data directory exists
+    os.makedirs("data", exist_ok=True)
+    
     if not os.path.exists(json_path):
+        logger.warning(f"Premium leads file not found at {json_path}, creating empty file")
+        # Create empty leads file
+        with open(json_path, 'w', encoding='utf-8') as f:
+            json.dump([], f)
         return []
     
     try:
         with open(json_path, 'r', encoding='utf-8') as f:
-            leads = json.load(f)
+            content = f.read().strip()
+            if not content:
+                logger.warning("Premium leads file is empty")
+                return []
+            leads = json.loads(content)
+        logger.info(f"Loaded {len(leads)} leads from {json_path}")
         return leads
     except Exception as e:
         logger.error(f"Error loading leads: {e}")
@@ -265,6 +278,25 @@ def run_premium_generation(target_countries, num_leads, quality_threshold):
 def index():
     """Main RAGSPRO dashboard page."""
     return render_template('ragspro_dashboard.html')
+
+
+@app.route('/api/debug/files')
+def debug_files():
+    """Debug endpoint to check file system."""
+    try:
+        import os
+        data_dir = "data"
+        files_info = {
+            'data_dir_exists': os.path.exists(data_dir),
+            'data_dir_contents': os.listdir(data_dir) if os.path.exists(data_dir) else [],
+            'premium_leads_exists': os.path.exists('data/premium_leads.json'),
+            'premium_leads_size': os.path.getsize('data/premium_leads.json') if os.path.exists('data/premium_leads.json') else 0,
+            'cwd': os.getcwd(),
+            'app_files': os.listdir('.')[:20]  # First 20 files in app directory
+        }
+        return jsonify({'success': True, 'files': files_info})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
 
 
 @app.route('/api/leads')
