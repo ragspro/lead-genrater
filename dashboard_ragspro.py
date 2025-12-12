@@ -211,8 +211,8 @@ FREE consultation available! Interested?
     return {'email': email, 'whatsapp': whatsapp}
 
 
-def run_premium_generation(target_countries, num_leads, quality_threshold):
-    """Run premium lead generation with thread safety."""
+def run_premium_generation(target_countries, target_cities, business_types, num_leads, quality_threshold):
+    """Run premium lead generation with thread safety and user-specified filters."""
     global generation_status
     
     try:
@@ -240,19 +240,39 @@ def run_premium_generation(target_countries, num_leads, quality_threshold):
             generation_status['progress'] = 15
             generation_status['message'] = 'Preparing queries...'
         
-        # Filter cities
-        if target_countries:
+        # Filter cities based on user selection
+        if target_cities and len(target_cities) > 0:
+            # User selected specific cities
+            filtered_cities = target_cities
+            logger.info(f"🎯 Using user-selected cities: {filtered_cities}")
+        elif target_countries and len(target_countries) > 0:
+            # User selected countries, filter cities by country
             filtered_cities = [city for city in CITIES 
                               if any(country in city for country in target_countries)]
+            logger.info(f"🌍 Filtered {len(filtered_cities)} cities for countries: {target_countries}")
         else:
-            filtered_cities = CITIES
+            # No filter, use all cities (limit to 10 for speed)
+            filtered_cities = CITIES[:10]
+            logger.info(f"🌎 Using all cities (limited to 10)")
         
-        # Generate queries
+        # Filter categories based on user selection
+        if business_types and len(business_types) > 0:
+            # User selected specific business types
+            filtered_categories = business_types
+            logger.info(f"💼 Using user-selected categories: {filtered_categories}")
+        else:
+            # No filter, use all categories (limit to 10 for speed)
+            filtered_categories = CATEGORIES[:10]
+            logger.info(f"🎯 Using all categories (limited to 10)")
+        
+        # Generate queries from filtered cities and categories
         all_queries = []
-        for city in filtered_cities[:10]:
-            for category in CATEGORIES[:10]:
+        for city in filtered_cities[:20]:  # Max 20 cities
+            for category in filtered_categories[:20]:  # Max 20 categories
                 query = f"{category} in {city}"
                 all_queries.append(query)
+        
+        logger.info(f"📋 Generated {len(all_queries)} search queries")
         
         with status_lock:
             generation_status['progress'] = 20
@@ -441,13 +461,23 @@ def generate_leads():
     
     try:
         data = request.json or {}
-        target_countries = data.get('countries', [])
+        
+        # Support both 'markets' (frontend) and 'countries' (legacy)
+        target_countries = data.get('markets', data.get('countries', []))
+        target_cities = data.get('cities', [])
+        business_types = data.get('business_types', [])
         num_leads = int(data.get('num_leads', 50))
         quality_threshold = float(data.get('quality_threshold', 70))
+        clear_old = data.get('clear_old', False)
+        
+        # Clear old leads if requested
+        if clear_old:
+            logger.info("🗑️ Clearing old leads before generation...")
+            save_premium_leads([])
         
         thread = threading.Thread(
             target=run_premium_generation,
-            args=(target_countries, num_leads, quality_threshold)
+            args=(target_countries, target_cities, business_types, num_leads, quality_threshold)
         )
         thread.daemon = True
         thread.start()
