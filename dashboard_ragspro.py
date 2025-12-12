@@ -982,6 +982,53 @@ def bulk_linkedin_search():
         return jsonify({'success': False, 'error': str(e)})
 
 
+@app.route('/api/lead/analyze', methods=['POST'])
+@limiter.limit("20 per minute")
+def analyze_lead():
+    """Analyze a lead with AI to identify problems and solutions."""
+    try:
+        data = request.json
+        lead = data.get('lead')
+        
+        if not lead:
+            return jsonify({'success': False, 'error': 'No lead provided'})
+        
+        # Use AI to analyze the lead
+        from src.ai_gemini import create_ai_assistant
+        from src.config import load_config
+        
+        config = load_config()
+        if not config.get('GEMINI_API_KEY'):
+            return jsonify({
+                'success': False,
+                'error': 'AI not configured'
+            })
+        
+        ai = create_ai_assistant(config['GEMINI_API_KEY'])
+        
+        # Generate analysis
+        business_name = lead.get('title', '')
+        business_type = lead.get('type', '')
+        rating = lead.get('rating', 0)
+        reviews = lead.get('reviews', 0)
+        address = lead.get('address', '')
+        
+        analysis_text = ai.analyze_business(business_name, business_type, rating, reviews, address)
+        
+        # Generate quick pitch
+        pitch = f"Hi {business_name}! Noticed your {rating}★ rating - impressive! We help {business_type} businesses get 3-5x more customers through modern tech. Interested in a FREE consultation?"
+        
+        return jsonify({
+            'success': True,
+            'analysis': analysis_text,
+            'quick_pitch': pitch
+        })
+        
+    except Exception as e:
+        logger.error(f"Lead analysis error: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
+
 if __name__ == '__main__':
     print("""
     ╔══════════════════════════════════════════════════════════╗
