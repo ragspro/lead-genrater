@@ -2,6 +2,7 @@
 
 import logging
 import google.generativeai as genai
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -11,15 +12,25 @@ class GeminiAI:
     
     def __init__(self, api_key: str):
         """Initialize Gemini AI with API key."""
-        genai.configure(api_key=api_key)
-        # Use gemini-1.5-flash for latest model
-        self.model = genai.GenerativeModel('gemini-1.5-flash')
-        logger.info("Gemini AI initialized (FREE) - using gemini-1.5-flash")
+        try:
+            genai.configure(api_key=api_key)
+            # Use gemini-2.5-flash for latest and fastest model
+            self.model = genai.GenerativeModel('gemini-2.5-flash')
+            logger.info("✅ Gemini AI initialized - using gemini-2.5-flash (Latest & Fastest)")
+        except Exception as e:
+            logger.error(f"❌ Failed to initialize Gemini: {e}")
+            # Fallback to older stable model
+            try:
+                self.model = genai.GenerativeModel('gemini-1.5-flash')
+                logger.info("⚠️ Using fallback model: gemini-1.5-flash")
+            except:
+                logger.error("❌ All Gemini models failed to initialize")
+                self.model = None
     
     def generate_cold_email(self, business_name: str, business_type: str, 
-                           city: str, rating: float, reviews: int, owner_name: str = None) -> str:
+                           city: str, rating: float, reviews: int, owner_name: str = None, custom_prompt: str = None) -> str:
         """
-        Generate personalized cold email using professional template.
+        Generate personalized cold email using professional template or custom prompt.
         
         Args:
             business_name: Name of the business
@@ -28,6 +39,7 @@ class GeminiAI:
             rating: Google rating
             reviews: Number of reviews
             owner_name: Owner name (optional, defaults to "Team")
+            custom_prompt: Custom AI prompt template (NEW - optional)
         
         Returns:
             Personalized email content
@@ -35,7 +47,18 @@ class GeminiAI:
         # Use owner name or default
         owner = owner_name if owner_name else f"{business_name} Team"
         
-        prompt = f"""You are writing on behalf of Ragspro.com - a premium software development agency.
+        # If custom prompt provided, use it with placeholder replacement
+        if custom_prompt:
+            prompt = custom_prompt.replace('{business_name}', business_name)
+            prompt = prompt.replace('{business_type}', business_type)
+            prompt = prompt.replace('{city}', city)
+            prompt = prompt.replace('{rating}', str(rating))
+            prompt = prompt.replace('{reviews}', str(reviews))
+            
+            logger.info(f"Using custom AI prompt for {business_name}")
+        else:
+            # Use default professional template
+            prompt = f"""You are writing on behalf of Ragspro.com - a premium software development agency.
 
 Generate a professional, SHORT cold email (under 100 words) for this prospect:
 
@@ -128,14 +151,140 @@ Track Record:
 
 Write ONLY the email body (no subject line):"""
 
-        try:
-            response = self.model.generate_content(prompt)
-            email = response.text.strip()
-            logger.info(f"Generated email for {business_name}")
-            return email
-        except Exception as e:
-            logger.error(f"Gemini AI error: {str(e)}")
-            return self._fallback_email(business_name, business_type, rating, reviews)
+        # Retry logic with exponential backoff
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                if self.model is None:
+                    logger.warning("⚠️ Model not initialized, using fallback")
+                    return self._fallback_email(business_name, business_type, rating, reviews)
+                
+                response = self.model.generate_content(
+                    prompt,
+                    generation_config=genai.types.GenerationConfig(
+                        temperature=0.7,
+                        max_output_tokens=500,
+                    ),
+                    request_options={'timeout': 30}  # 30 second timeout
+                )
+                email = response.text.strip()
+                logger.info(f"✅ Generated email for {business_name}")
+                return email
+            except Exception as e:
+                logger.warning(f"⚠️ Attempt {attempt + 1}/{max_retries} failed: {str(e)[:100]}")
+                if attempt < max_retries - 1:
+                    time.sleep(2 ** attempt)  # Exponential backoff: 1s, 2s, 4s
+                else:
+                    logger.error(f"❌ All retries failed for {business_name}, using fallback")
+                    return self._fallback_email(business_name, business_type, rating, reviews)
+    
+    def generate_call_script(self, business_name: str, business_type: str, 
+                            rating: float, reviews: int) -> str:
+        """
+        Generate phone call script using Gemini AI.
+        
+        Args:
+            business_name: Name of the business
+            business_type: Type/category of business
+            rating: Google rating
+            reviews: Number of reviews
+        
+        Returns:
+            Call script text
+        """
+        prompt = f"""Generate a professional phone call script for calling {business_name} ({business_type}).
+
+Rating: {rating}★ ({reviews} reviews)
+
+CALL SCRIPT STRUCTURE:
+
+1. OPENING (Warm & Professional):
+"Hi, this is Raghav from RagsPro.com. Am I speaking with someone from {business_name}?"
+
+2. PERMISSION:
+"Great! Do you have 2 minutes? I noticed your excellent {rating}★ rating and wanted to reach out."
+
+3. HOOK (Problem/Opportunity):
+Based on {business_type}, identify their likely pain point:
+- Missing online presence
+- Outdated website
+- No mobile app
+- Manual processes
+
+4. VALUE PROPOSITION (Quick):
+"We help {business_type} businesses like yours get 3-5x more customers through modern tech solutions."
+
+5. PROOF:
+"We've built successful platforms like LawAI, Glow, and HimShakti - 200+ projects delivered."
+
+6. CALL TO ACTION:
+"Would you be open to a quick 10-minute call to see how we can help {business_name} grow?"
+
+7. OBJECTION HANDLING:
+If busy: "No problem! Can I send you a quick email with our portfolio?"
+If not interested: "Understood! Can I follow up in 3 months?"
+If interested: "Perfect! When works best for you - today or tomorrow?"
+
+8. CLOSING:
+"Great talking to you! I'll send you an email right away with more details. Have a great day!"
+
+Write ONLY the complete call script (150-200 words):"""
+
+        # Retry logic
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                if self.model is None:
+                    return self._fallback_call_script(business_name, business_type, rating)
+                
+                response = self.model.generate_content(
+                    prompt,
+                    generation_config=genai.types.GenerationConfig(temperature=0.7, max_output_tokens=400),
+                    request_options={'timeout': 30}
+                )
+                script = response.text.strip()
+                logger.info(f"✅ Generated call script for {business_name}")
+                return script
+            except Exception as e:
+                logger.warning(f"⚠️ Call script attempt {attempt + 1}/{max_retries} failed")
+                if attempt < max_retries - 1:
+                    time.sleep(2 ** attempt)
+                else:
+                    return self._fallback_call_script(business_name, business_type, rating)
+    
+    def _fallback_call_script(self, business_name: str, business_type: str, rating: float) -> str:
+        """Fallback call script template."""
+        return f"""📞 CALL SCRIPT FOR {business_name}
+
+OPENING:
+"Hi, this is Raghav from RagsPro.com. Am I speaking with someone from {business_name}?"
+
+PERMISSION:
+"Great! Do you have 2 minutes? I noticed your excellent {rating}★ rating."
+
+HOOK:
+"I help {business_type} businesses get 3-5x more customers through modern websites and apps."
+
+PROOF:
+"We've built LawAI, Glow, HimShakti - 200+ projects, 50+ happy clients."
+
+VALUE:
+"For {business_type} businesses, we typically see 3-5x revenue increase within 6 months."
+
+CALL TO ACTION:
+"Would you be open to a quick 10-minute call to discuss how we can help {business_name} grow?"
+
+OBJECTION HANDLING:
+- Busy: "Can I send you an email with our portfolio?"
+- Not interested: "Can I follow up in 3 months?"
+- Interested: "When works best - today or tomorrow?"
+
+CLOSING:
+"Great talking to you! I'll send details via email. Have a great day!"
+
+📞 Call: +918700048490
+📧 Email: ragsproai@gmail.com
+🌐 Portfolio: ragspro.com"""
     
     def generate_whatsapp_message(self, business_name: str, business_type: str) -> str:
         """
@@ -186,14 +335,27 @@ Examples of GOOD style:
 
 Write the message:"""
 
-        try:
-            response = self.model.generate_content(prompt)
-            message = response.text.strip()
-            logger.info(f"Generated WhatsApp message for {business_name}")
-            return message
-        except Exception as e:
-            logger.error(f"Gemini AI error: {str(e)}")
-            return self._fallback_whatsapp(business_name, business_type)
+        # Retry logic
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                if self.model is None:
+                    return self._fallback_whatsapp(business_name, business_type)
+                
+                response = self.model.generate_content(
+                    prompt,
+                    generation_config=genai.types.GenerationConfig(temperature=0.7, max_output_tokens=300),
+                    request_options={'timeout': 30}
+                )
+                message = response.text.strip()
+                logger.info(f"✅ Generated WhatsApp message for {business_name}")
+                return message
+            except Exception as e:
+                logger.warning(f"⚠️ WhatsApp attempt {attempt + 1}/{max_retries} failed")
+                if attempt < max_retries - 1:
+                    time.sleep(2 ** attempt)
+                else:
+                    return self._fallback_whatsapp(business_name, business_type)
     
     def analyze_business(self, business_name: str, business_type: str, 
                         rating: float, reviews: int, address: str) -> str:

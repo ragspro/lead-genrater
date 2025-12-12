@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAGSPRO - Client Acquisition System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0F0F14;
+            color: #E5E7EB;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(79, 70, 229, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+            animation: gradientShift 15s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 22px;
+            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.25);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 35px rgba(124, 58, 237, 0.35);
+            border-color: rgba(124, 58, 237, 0.3);
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 60px 40px;
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+        
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .hero-logo {
+            font-size: 3.5em;
+            font-weight: 900;
+            background: linear-gradient(135deg, #7C3AED 0%, #4F46E5 50%, #0EA5E9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+            text-shadow: 0 0 60px rgba(124, 58, 237, 0.5);
+            animation: glow 3s ease-in-out infinite;
+        }
+        
+        @keyframes glow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.2); }
+        }
+        
+        .hero-subtitle {
+            font-size: 1.3em;
+            color: #9CA3AF;
+            font-weight: 500;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-cube {
+            padding: 32px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.6s ease-out backwards;
+        }
+        
+        .stat-cube::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 4px;
+            background: linear-gradient(90deg, #7C3AED, #4F46E5, #0EA5E9);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+        
+        .stat-cube:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .stat-cube:nth-child(1) { animation-delay: 0.1s; }
+        .stat-cube:nth-child(2) { animation-delay: 0.2s; }
+        .stat-cube:nth-child(3) { animation-delay: 0.3s; }
+        .stat-cube:nth-child(4) { animation-delay: 0.4s; }
+        .stat-cube:nth-child(5) { animation-delay: 0.5s; }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .stat-icon {
+            font-size: 2.5em;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 0 10px rgba(124, 58, 237, 0.5));
+        }
+        
+        .stat-value {
+            font-size: 3em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #7C3AED 0%, #0EA5E9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+        
+        .stat-label {
+            color: #9CA3AF;
+            font-size: 1.05em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Hot Leads Badge */
+        .hot-badge {
+            background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 700;
+            display: inline-block;
+            margin-top: 8px;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        /* Generate Form */
+        .generate-section {
+            padding: 40px;
+            margin-bottom: 40px;
+            animation: fadeInUp 0.6s ease-out 0.3s backwards;
+        }
+        
+        .section-title {
+            font-size: 2em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #7C3AED 0%, #0EA5E9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+            letter-spacing: -0.02em;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+        
+        .form-field {
+            position: relative;
+        }
+        
+        .form-label {
+            display: block;
+            color: #D1D5DB;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1.05em;
+        }
+        
+        .form-input, .form-select {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            color: #E5E7EB;
+            font-size: 1em;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #7C3AED;
+            background: rgba(124, 58, 237, 0.1);
+            box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.2);
+        }
+        
+        .form-select option {
+            background: #1E1E2F;
+            color: #E5E7EB;
+        }
+        
+        /* Gradient Glow Buttons */
+        .btn {
+            padding: 18px 36px;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Inter', sans-serif;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(124, 58, 237, 0.6);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #E5E7EB;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+        }
+        
+        .btn-info {
+            background: linear-gradient(135deg, #0EA5E9 0%, #0284C7 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(14, 165, 233, 0.4);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 25px;
+            overflow: hidden;
+            margin: 25px 0;
+            display: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .progress-bar.active {
+            display: block;
+            animation: slideIn 0.4s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #7C3AED 0%, #4F46E5 50%, #0EA5E9 100%);
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1em;
+            position: relative;
+        }
+        
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        /* Leads Section */
+        .leads-section {
+            padding: 40px;
+            animation: fadeInUp 0.6s ease-out 0.4s backwards;
+        }
+        
+        .search-filter-bar {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            padding: 16px 20px 16px 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            color: #E5E7EB;
+            font-size: 1.05em;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%237C3AED" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>');
+            background-repeat: no-repeat;
+            background-position: 18px center;
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: #7C3AED;
+            background-color: rgba(124, 58, 237, 0.1);
+            box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.2);
+        }
+        
+        .filter-select {
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            color: #E5E7EB;
+            font-size: 1em;
+            font-family: 'Inter', sans-serif;
+            min-width: 180px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: #7C3AED;
+            background: rgba(124, 58, 237, 0.1);
+        }
+        
+        /* Lead Card */
+        .lead-card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 24px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .lead-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 3px;
+            background: linear-gradient(90deg, #7C3AED, #4F46E5, #0EA5E9);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+        
+        .lead-card:hover {
+            border-color: rgba(124, 58, 237, 0.4);
+            box-shadow: 0 12px 35px rgba(124, 58, 237, 0.25);
+            transform: translateY(-4px);
+        }
+        
+        .lead-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .lead-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 20px;
+            gap: 20px;
+        }
+        
+        .lead-title h3 {
+            color: #F9FAFB;
+            font-size: 1.6em;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.01em;
+        }
+        
+        .lead-title p {
+            color: #9CA3AF;
+            font-size: 1.05em;
+            font-weight: 500;
+        }
+        
+        .quality-badge {
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 1.15em;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            letter-spacing: -0.01em;
+            white-space: nowrap;
+        }
+        
+        .quality-excellent {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: white;
+        }
+        
+        .quality-good {
+            background: linear-gradient(135deg, #0EA5E9 0%, #0284C7 100%);
+            color: white;
+        }
+        
+        .quality-medium {
+            background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+            color: white;
+        }
+        
+        .lead-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #D1D5DB;
+        }
+        
+        .detail-item strong {
+            background: linear-gradient(135deg, #7C3AED 0%, #0EA5E9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+        
+        /* Info Boxes */
+        .info-box {
+            border-radius: 14px;
+            padding: 18px;
+            margin: 16px 0;
+            border-left: 4px solid;
+        }
+        
+        .info-box-ai {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: #3B82F6;
+        }
+        
+        .info-box-pain {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: #F59E0B;
+        }
+        
+        .info-box-solution {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: #10B981;
+        }
+        
+        .info-box strong {
+            color: #F9FAFB;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.05em;
+        }
+        
+        .info-box p, .info-box li {
+            color: #D1D5DB;
+            line-height: 1.6;
+        }
+        
+        /* Content Tabs */
+        .content-tabs {
+            display: flex;
+            gap: 12px;
+            margin: 20px 0 16px;
+            flex-wrap: wrap;
+        }
+        
+        .tab-btn {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #D1D5DB;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn:hover {
+            border-color: #7C3AED;
+            background: rgba(124, 58, 237, 0.1);
+        }
+        
+        .tab-btn.active {
+            background: linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+        }
+        
+        .content-body {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 24px;
+            color: #D1D5DB;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+        
+        /* Status Badge */
+        .status-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 700;
+            margin-left: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-new {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60A5FA;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        
+        .status-contacted {
+            background: rgba(245, 158, 11, 0.2);
+            color: #FBBF24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        
+        .status-sent {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34D399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+        }
+        
+        .empty-state h3 {
+            font-size: 2em;
+            font-weight: 700;
+            color: #F9FAFB;
+            margin-bottom: 12px;
+        }
+        
+        .empty-state p {
+            color: #9CA3AF;
+            font-size: 1.1em;
+        }
+        
+        /* Loading Spinner */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .spinner {
+            border: 5px solid rgba(255, 255, 255, 0.1);
+            border-top: 5px solid #7C3AED;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #6D28D9 0%, #4338CA 100%);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container { padding: 20px 15px; }
+            .hero { padding: 40px 20px; }
+            .hero-logo { font-size: 2.5em; }
+            .hero-subtitle { font-size: 1.1em; }
+            .stats-grid { grid-template-columns: 1fr; gap: 16px; }
+            .generate-section, .leads-section { padding: 25px; }
+            .form-grid { grid-template-columns: 1fr; }
+            .search-filter-bar { flex-direction: column; }
+            .search-box { min-width: 100%; }
+            .lead-header { flex-direction: column; }
+            .action-buttons { flex-direction: column; }
+            .btn { width: 100%; }
+        }
+        
+        /* Notification Toast */
+        .notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 18px 28px;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 1.05em;
+            z-index: 10000;
+            animation: slideInRight 0.4s ease-out;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .notification-success {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: white;
+        }
+        
+        .notification-error {
+            background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+            color: white;
+        }
+        
+        .notification-info {
+            background: linear-gradient(135deg, #0EA5E9 0%, #0284C7 100%);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero glass-card">
+            <div class="hero-logo">⚡ RAGSPRO</div>
+            <div class="hero-subtitle">
+                AI-Powered Client Acquisition System | Automated Lead Generation & Outreach
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-cube glass-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-value" id="stat-total">0</div>
+                <div class="stat-label">Total Leads</div>
+            </div>
+            
+            <div class="stat-cube glass-card">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-value" id="stat-quality">0</div>
+                <div class="stat-label">Avg Quality</div>
+            </div>
+            
+            <div class="stat-cube glass-card">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-value" id="stat-rating">0</div>
+                <div class="stat-label">Avg Rating</div>
+            </div>
+            
+            <div class="stat-cube glass-card">
+                <div class="stat-icon">🔥</div>
+                <div class="stat-value" id="stat-hot">0</div>
+                <div class="stat-label">Hot Leads</div>
+                <div class="hot-badge" id="hot-badge">🚀 URGENT</div>
+            </div>
+            
+            <div class="stat-cube glass-card">
+                <div class="stat-icon">📅</div>
+                <div class="stat-value" id="stat-today">0</div>
+                <div class="stat-label">Today's Leads</div>
+            </div>
+        </div>
+
+        <!-- Generate Section -->
+        <div class="generate-section glass-card">
+            <h2 class="section-title">🚀 Generate Premium Leads</h2>
+            
+            <div class="form-grid">
+                <div class="form-field">
+                    <label class="form-label">🌍 Target Markets</label>
+                    <select id="target-markets" class="form-select" multiple style="height: 120px;">
+                        <option value="">All International Markets</option>
+                        <option value="USA">🇺🇸 USA (Highest Paying)</option>
+                        <option value="UK">🇬🇧 UK (High Paying)</option>
+                        <option value="UAE">🇦🇪 UAE (Very High Paying)</option>
+                        <option value="Canada">🇨🇦 Canada (High Paying)</option>
+                        <option value="Australia">🇦🇺 Australia (High Paying)</option>
+                        <option value="France">🇫🇷 France (Good Paying)</option>
+                        <option value="Germany">🇩🇪 Germany (Good Paying)</option>
+                        <option value="Singapore">🇸🇬 Singapore (High Paying)</option>
+                    </select>
+                </div>
+                
+                <div class="form-field">
+                    <label class="form-label">📊 Number of Leads</label>
+                    <input type="number" id="num-leads" class="form-input" value="50" min="10" max="500">
+                </div>
+                
+                <div class="form-field">
+                    <label class="form-label">🎯 Quality Threshold</label>
+                    <input type="number" id="quality-threshold" class="form-input" value="70" min="50" max="100">
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                <button class="btn btn-primary" id="generate-btn" onclick="startGeneration()">
+                    🚀 Generate Leads
+                </button>
+                <button class="btn btn-danger" id="stop-btn" onclick="stopGeneration()" style="display: none;">
+                    🛑 Stop Generation
+                </button>
+                <button class="btn btn-secondary" onclick="viewHistory()">
+                    📅 View History
+                </button>
+                <a href="/api/export/csv" class="btn btn-success" style="text-decoration: none;">
+                    📊 Export CSV
+                </a>
+            </div>
+            
+            <div class="progress-bar" id="progress-bar">
+                <div class="progress-fill" id="progress-fill">0%</div>
+            </div>
+            
+            <div id="status-message"></div>
+        </div>
+
+        <!-- Leads Section -->
+        <div class="leads-section glass-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 16px;">
+                <h2 class="section-title" style="margin: 0;">💼 Premium Leads</h2>
+                <button class="btn btn-secondary" onclick="showAllHistory()" style="font-size: 0.9em; padding: 12px 24px;">
+                    📊 Total: <span id="total-leads-count">0</span>
+                </button>
+            </div>
+            
+            <div class="search-filter-bar">
+                <input type="text" class="search-box" id="search-box" placeholder="🔍 Search leads...">
+                
+                <select id="filter-category" class="filter-select">
+                    <option value="">All Categories</option>
+                </select>
+                
+                <select id="filter-city" class="filter-select">
+                    <option value="">All Cities</option>
+                </select>
+                
+                <select id="filter-rating" class="filter-select">
+                    <option value="">All Ratings</option>
+                    <option value="4.5">4.5+ ⭐⭐⭐⭐⭐</option>
+                    <option value="4.0">4.0+ ⭐⭐⭐⭐</option>
+                    <option value="3.5">3.5+ ⭐⭐⭐</option>
+                </select>
+                
+                <button class="btn btn-secondary" onclick="clearFilters()" style="padding: 16px 24px;">
+                    🔄 Clear
+                </button>
+                
+                <button class="btn btn-info" onclick="showAllLeads()" style="padding: 16px 24px;">
+                    📋 Show All
+                </button>
+            </div>
+            
+            <div id="leads-container">
+                <div class="empty-state">
+                    <h3>No leads yet</h3>
+                    <p>Click "Generate Leads" above to start finding high-paying clients!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allLeads = [];
+        let displayedLeads = [];
+        let currentPage = 0;
+        const leadsPerPage = 5;
+        let statusCheckInterval = null;
+        let isGenerating = false;
+
+        // Load on page load
+        window.addEventListener('load', () => {
+            loadStats();
+            loadLeads();
+            loadHotLeads();
+            loadTodaysLeads();
+        });
+
+        // Search and filter
+        document.getElementById('search-box').addEventListener('input', applyFilters);
+        document.getElementById('filter-category').addEventListener('change', applyFilters);
+        document.getElementById('filter-city').addEventListener('change', applyFilters);
+        document.getElementById('filter-rating').addEventListener('change', applyFilters);
+
+        function applyFilters() {
+            const searchQuery = document.getElementById('search-box').value.toLowerCase();
+            const categoryFilter = document.getElementById('filter-category').value.toLowerCase();
+            const cityFilter = document.getElementById('filter-city').value.toLowerCase();
+            const ratingFilter = parseFloat(document.getElementById('filter-rating').value) || 0;
+            
+            const filtered = allLeads.filter(lead => {
+                const matchesSearch = !searchQuery || 
+                    lead.title.toLowerCase().includes(searchQuery) ||
+                    lead.type.toLowerCase().includes(searchQuery) ||
+                    lead.address.toLowerCase().includes(searchQuery);
+                
+                const matchesCategory = !categoryFilter || 
+                    lead.type.toLowerCase().includes(categoryFilter);
+                
+                const matchesCity = !cityFilter || 
+                    lead.address.toLowerCase().includes(cityFilter);
+                
+                const matchesRating = !ratingFilter || 
+                    (lead.rating && lead.rating >= ratingFilter);
+                
+                return matchesSearch && matchesCategory && matchesCity && matchesRating;
+            });
+            
+            currentPage = 0;
+            displayedLeads = [];
+            displayLeads(filtered);
+        }
+
+        function clearFilters() {
+            document.getElementById('search-box').value = '';
+            document.getElementById('filter-category').value = '';
+            document.getElementById('filter-city').value = '';
+            document.getElementById('filter-rating').value = '';
+            currentPage = 0;
+            displayedLeads = [];
+            displayLeads(allLeads);
+        }
+
+        function showAllLeads() {
+            currentPage = 0;
+            displayedLeads = [];
+            const container = document.getElementById('leads-container');
+            
+            if (allLeads.length === 0) {
+                container.innerHTML = '<div class="empty-state"><h3>No leads found</h3><p>Try generating some premium leads!</p></div>';
+                return;
+            }
+            
+            displayedLeads = allLeads;
+            const leadsHTML = allLeads.map((lead, index) => generateLeadCardHTML(lead, index)).join('');
+            container.innerHTML = leadsHTML + `
+                <div style="text-align: center; margin: 30px 0;">
+                    <p style="color: #9CA3AF; font-weight: 600; font-size: 1.1em;">
+                        ✅ All ${allLeads.length} leads displayed
+                    </p>
+                </div>
+            `;
+        }
+
+        function populateFilterOptions() {
+            const categories = [...new Set(allLeads.map(lead => lead.type))].sort();
+            const categorySelect = document.getElementById('filter-category');
+            categorySelect.innerHTML = '<option value="">All Categories</option>';
+            categories.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat;
+                option.textContent = cat;
+                categorySelect.appendChild(option);
+            });
+            
+            const cities = [...new Set(allLeads.map(lead => {
+                const match = lead.address.match(/([A-Za-z\s]+)(?:,|\s+\d)/);
+                return match ? match[1].trim() : '';
+            }).filter(Boolean))].sort();
+            
+            const citySelect = document.getElementById('filter-city');
+            citySelect.innerHTML = '<option value="">All Cities</option>';
+            cities.forEach(city => {
+                const option = document.createElement('option');
+                option.value = city;
+                option.textContent = city;
+                citySelect.appendChild(option);
+            });
+        }
+
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/stats');
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('stat-total').textContent = data.stats.total_leads;
+                    document.getElementById('stat-quality').textContent = data.stats.avg_quality + '/100';
+                    document.getElementById('stat-rating').textContent = data.stats.avg_rating + '⭐';
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        async function loadHotLeads() {
+            try {
+                const response = await fetch('/api/leads/hot');
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('stat-hot').textContent = data.total || 0;
+                    const badge = document.getElementById('hot-badge');
+                    if (data.total > 0) {
+                        badge.textContent = `🚀 ${data.total} URGENT`;
+                        badge.style.display = 'inline-block';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading hot leads:', error);
+            }
+        }
+
+        async function loadTodaysLeads() {
+            try {
+                const response = await fetch('/api/leads/today');
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('stat-today').textContent = data.leads.length || 0;
+                }
+            } catch (error) {
+                console.error('Error loading today\'s leads:', error);
+            }
+        }
+
+        async function loadLeads() {
+            try {
+                const container = document.getElementById('leads-container');
+                container.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading leads...</p></div>';
+
+                const response = await fetch('/api/leads');
+                const data = await response.json();
+
+                if (data.success) {
+                    allLeads = data.leads;
+                    currentPage = 0;
+                    displayedLeads = [];
+                    displayLeads(allLeads);
+                    document.getElementById('total-leads-count').textContent = allLeads.length;
+                    populateFilterOptions();
+                } else {
+                    container.innerHTML = '<div class="empty-state"><h3>Error loading leads</h3></div>';
+                }
+            } catch (error) {
+                console.error('Error loading leads:', error);
+                showNotification('⚠️ Connection lost. Retrying...', 'error');
+                setTimeout(loadLeads, 5000);
+            }
+        }
+
+        function generateLeadCardHTML(lead, index) {
+            const analysis = lead.deep_analysis || {};
+            const solutions = analysis.ragspro_solutions || {};
+            const painPoints = analysis.pain_points || [];
+            
+            return `
+                <div class="lead-card">
+                    <div class="lead-header">
+                        <div class="lead-title">
+                            <h3>
+                                ${lead.title}
+                                ${lead.ai_researched ? '<span class="status-badge status-sent">🤖 AI Analyzed</span>' : ''}
+                                ${lead.status ? `<span class="status-badge status-${getStatusClass(lead.status)}">${lead.status}</span>` : ''}
+                            </h3>
+                            <p>${lead.type} • ${lead.address}</p>
+                        </div>
+                        <div class="quality-badge ${getQualityClass(lead.quality_score)}">
+                            ${lead.quality_score}/100
+                        </div>
+                    </div>
+
+                    <div class="lead-details">
+                        <div class="detail-item">
+                            <strong>⭐ Rating:</strong> ${lead.rating || 'N/A'} (${lead.reviews || 0} reviews)
+                        </div>
+                        <div class="detail-item">
+                            <strong>📞 Phone:</strong> ${lead.phone || 'N/A'}
+                        </div>
+                        <div class="detail-item">
+                            <strong>🌐 Website:</strong> ${lead.website || 'None (Opportunity!)'}
+                        </div>
+                        ${analysis.priority_score ? `
+                        <div class="detail-item">
+                            <strong>🎯 Priority:</strong> ${analysis.priority_score}/100
+                        </div>
+                        ` : ''}
+                        ${analysis.estimated_budget ? `
+                        <div class="detail-item">
+                            <strong>💰 Budget:</strong> ${analysis.estimated_budget.range}
+                        </div>
+                        ` : ''}
+                    </div>
+
+                    ${analysis.ai_insights ? `
+                    <div class="info-box info-box-ai">
+                        <strong>🤖 AI Insights</strong>
+                        <p>${analysis.ai_insights}</p>
+                    </div>
+                    ` : ''}
+
+                    ${painPoints.length > 0 ? `
+                    <div class="info-box info-box-pain">
+                        <strong>⚠️ Pain Points</strong>
+                        <ul style="margin-top: 8px; padding-left: 20px;">
+                            ${painPoints.slice(0, 3).map(point => `<li style="margin: 5px 0;">${point}</li>`).join('')}
+                        </ul>
+                    </div>
+                    ` : ''}
+
+                    ${solutions.immediate && solutions.immediate.length > 0 ? `
+                    <div class="info-box info-box-solution">
+                        <strong>💡 RagsPro Solutions</strong>
+                        <div style="margin-top: 10px;">
+                            ${solutions.immediate.slice(0, 2).map(sol => `
+                                <div style="background: rgba(255, 255, 255, 0.05); padding: 12px; border-radius: 10px; margin: 8px 0;">
+                                    <strong style="color: #34D399;">${sol.title}</strong>
+                                    <p style="font-size: 0.9em; margin: 5px 0;">${sol.description}</p>
+                                    <div style="display: flex; gap: 15px; margin-top: 5px; font-size: 0.85em;">
+                                        <span>⏱️ ${sol.timeline}</span>
+                                        <span>💰 ${sol.price}</span>
+                                        <span>📈 ROI: ${sol.roi}</span>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    <div class="content-tabs">
+                        <button class="tab-btn active" onclick="showTab(${index}, 'email')">📧 Email</button>
+                        <button class="tab-btn" onclick="showTab(${index}, 'whatsapp')">💬 WhatsApp</button>
+                        ${analysis.ragspro_solutions ? `<button class="tab-btn" onclick="showTab(${index}, 'solutions')">💡 Solutions</button>` : ''}
+                    </div>
+                    <div class="content-body" id="content-${index}">
+                        ${lead.ai_content?.email || 'Generating content...'}
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn btn-success" onclick="sendWhatsApp(${index})">
+                            💬 Send WhatsApp
+                        </button>
+                        <button class="btn btn-info" onclick="sendEmail(${index})">
+                            📧 Send Email
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayLeads(leads, append = false) {
+            const container = document.getElementById('leads-container');
+
+            if (leads.length === 0 && !append) {
+                container.innerHTML = '<div class="empty-state"><h3>No leads found</h3><p>Try generating some premium leads!</p></div>';
+                return;
+            }
+
+            const start = currentPage * leadsPerPage;
+            const end = start + leadsPerPage;
+            const leadsToShow = append ? leads : leads.slice(start, end);
+            
+            if (!append) {
+                displayedLeads = leadsToShow;
+            } else {
+                displayedLeads = displayedLeads.concat(leadsToShow);
+            }
+
+            const leadsHTML = leadsToShow.map((lead, index) => {
+                const actualIndex = append ? displayedLeads.length - leadsToShow.length + index : start + index;
+                return generateLeadCardHTML(lead, actualIndex);
+            }).join('');
+            
+            if (append) {
+                container.insertAdjacentHTML('beforeend', leadsHTML);
+            } else {
+                container.innerHTML = leadsHTML;
+            }
+            
+            updateLoadMoreButton(leads.length);
+        }
+
+        function updateLoadMoreButton(totalLeads) {
+            const container = document.getElementById('leads-container');
+            const existingButton = document.getElementById('load-more-btn');
+            if (existingButton) existingButton.remove();
+            
+            const shown = displayedLeads.length;
+            const remaining = totalLeads - shown;
+            
+            if (remaining > 0) {
+                const buttonHTML = `
+                    <div id="load-more-btn" style="text-align: center; margin: 30px 0;">
+                        <button class="btn btn-primary" onclick="loadMoreLeads()" style="padding: 16px 40px;">
+                            📥 Load More (${remaining} remaining)
+                        </button>
+                        <p style="color: #9CA3AF; margin-top: 10px;">
+                            Showing ${shown} of ${totalLeads} leads
+                        </p>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', buttonHTML);
+            } else if (totalLeads > 0) {
+                container.insertAdjacentHTML('beforeend', `
+                    <div id="load-more-btn" style="text-align: center; margin: 30px 0;">
+                        <p style="color: #9CA3AF; font-weight: 600;">
+                            ✅ All ${totalLeads} leads displayed
+                        </p>
+                    </div>
+                `);
+            }
+        }
+
+        function loadMoreLeads() {
+            currentPage++;
+            const start = currentPage * leadsPerPage;
+            const end = start + leadsPerPage;
+            const moreLeads = allLeads.slice(start, end);
+            if (moreLeads.length > 0) {
+                displayLeads(moreLeads, true);
+            }
+        }
+
+        function getQualityClass(score) {
+            if (score >= 90) return 'quality-excellent';
+            if (score >= 70) return 'quality-good';
+            return 'quality-medium';
+        }
+
+        function getStatusClass(status) {
+            if (!status) return 'new';
+            if (status.includes('Sent')) return 'sent';
+            if (status.includes('Ready') || status.includes('Contacted')) return 'contacted';
+            return 'new';
+        }
+
+        function showTab(index, type) {
+            const lead = allLeads[index];
+            const contentDiv = document.getElementById(`content-${index}`);
+            const analysis = lead.deep_analysis || {};
+
+            if (type === 'email') {
+                contentDiv.textContent = lead.ai_content?.email || 'Generating content...';
+            } else if (type === 'whatsapp') {
+                contentDiv.textContent = lead.ai_content?.whatsapp || 'Generating content...';
+            } else if (type === 'solutions') {
+                const solutions = analysis.ragspro_solutions || {};
+                let html = '<div style="padding: 10px;">';
+                
+                if (solutions.immediate && solutions.immediate.length > 0) {
+                    html += '<h4 style="color: #34D399; margin-bottom: 10px;">🚀 Immediate Solutions</h4>';
+                    solutions.immediate.forEach(sol => {
+                        html += `
+                            <div style="background: rgba(16, 185, 129, 0.1); padding: 12px; border-radius: 10px; margin: 8px 0; border-left: 3px solid #10B981;">
+                                <strong style="color: #34D399;">${sol.title}</strong>
+                                <p style="margin: 5px 0;">${sol.description}</p>
+                                <div style="font-size: 0.9em; margin-top: 5px;">
+                                    ⏱️ ${sol.timeline} | 💰 ${sol.price} | 📈 ${sol.roi}
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+                
+                html += '</div>';
+                contentDiv.innerHTML = html;
+            }
+
+            const card = contentDiv.closest('.lead-card');
+            card.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        async function sendWhatsApp(index) {
+            const lead = allLeads[index];
+            const phone = lead.phone || '';
+            const message = lead.ai_content?.whatsapp || '';
+            const businessName = lead.title;
+
+            if (!phone) {
+                showNotification('❌ No phone number available', 'error');
+                return;
+            }
+
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = '⏳ Sending...';
+
+            try {
+                const response = await fetch('/api/send-whatsapp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        lead_id: index,
+                        phone: phone,
+                        message: message,
+                        business_name: businessName
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    window.open(data.url, '_blank');
+                    showNotification(`✅ WhatsApp sent to ${businessName}`, 'success');
+                    lead.status = 'WhatsApp Sent';
+                    btn.textContent = '✅ Sent';
+                    setTimeout(() => loadLeads(), 2000);
+                } else {
+                    throw new Error(data.error || 'Failed to send WhatsApp');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification(`❌ Error: ${error.message}`, 'error');
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        }
+
+        async function sendEmail(index) {
+            const lead = allLeads[index];
+            const email = lead.email || '';
+            const subject = 'Partnership Opportunity - RagsPro.com';
+            const body = lead.ai_content?.email || '';
+            const businessName = lead.title;
+
+            if (!body) {
+                showNotification('❌ No email content available', 'error');
+                return;
+            }
+
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = '⏳ Sending...';
+
+            try {
+                const response = await fetch('/api/send-email', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        lead_id: index,
+                        email: email,
+                        subject: subject,
+                        body: body,
+                        business_name: businessName
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    if (data.url) window.open(data.url, '_blank');
+                    showNotification(`✅ Email sent to ${businessName}`, 'success');
+                    lead.status = data.status === 'sent' ? 'Email Sent' : 'Email Ready';
+                    btn.textContent = data.status === 'sent' ? '✅ Sent' : '✅ Ready';
+                    setTimeout(() => loadLeads(), 2000);
+                } else {
+                    throw new Error(data.error || 'Failed to send email');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification(`❌ Error: ${error.message}`, 'error');
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        }
+
+        async function startGeneration() {
+            const markets = Array.from(document.getElementById('target-markets').selectedOptions).map(opt => opt.value);
+            const numLeads = parseInt(document.getElementById('num-leads').value);
+            const qualityThreshold = parseInt(document.getElementById('quality-threshold').value);
+
+            document.getElementById('generate-btn').style.display = 'none';
+            document.getElementById('stop-btn').style.display = 'inline-block';
+            document.getElementById('progress-bar').classList.add('active');
+            isGenerating = true;
+
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        markets: markets,
+                        num_leads: numLeads,
+                        quality_threshold: qualityThreshold
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showNotification('✅ Generation started!', 'success');
+                    statusCheckInterval = setInterval(checkGenerationStatus, 2000);
+                } else {
+                    throw new Error(data.error || 'Failed to start generation');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification(`❌ Error: ${error.message}`, 'error');
+                stopGeneration();
+            }
+        }
+
+        async function checkGenerationStatus() {
+            try {
+                const response = await fetch('/api/generation-status');
+                const data = await response.json();
+
+                if (data.is_running) {
+                    const progress = data.progress || 0;
+                    document.getElementById('progress-fill').style.width = progress + '%';
+                    document.getElementById('progress-fill').textContent = progress + '%';
+                    
+                    if (data.current_lead) {
+                        showNotification(`🔍 Processing: ${data.current_lead}`, 'info');
+                    }
+                } else {
+                    clearInterval(statusCheckInterval);
+                    stopGeneration();
+                    loadStats();
+                    loadHotLeads();
+                    loadTodaysLeads();
+                    showNotification('✅ Generation complete!', 'success');
+                }
+            } catch (error) {
+                console.error('Error checking status:', error);
+            }
+        }
+
+        function stopGeneration() {
+            isGenerating = false;
+            clearInterval(statusCheckInterval);
+            document.getElementById('generate-btn').style.display = 'inline-block';
+            document.getElementById('stop-btn').style.display = 'none';
+            document.getElementById('progress-bar').classList.remove('active');
+        }
+
+        function viewHistory() {
+            window.location.href = '/history';
+        }
+
+        function showAllHistory() {
+            showAllLeads();
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideInRight 0.4s ease-out reverse';
+                setTimeout(() => notification.remove(), 400);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

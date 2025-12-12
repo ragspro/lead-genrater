@@ -1,273 +1,181 @@
-gi# 🚀 RAGSPRO LEAD GENERATION SYSTEM
+# 🚀 RAGSPRO - Lead Generation System
 
-**Automatic Lead Generation & Client Acquisition for Software Development Agency**
-
-Generate high-paying international clients and send personalized outreach automatically!
+**AI-Powered Client Acquisition Dashboard**
 
 ---
 
-## ⚡ QUICK START (5 Minutes)
+## ⚡ Quick Start
 
 ```bash
-# 1. Install dependencies
-pip install -r requirements.txt
+# Start the dashboard
+python3 dashboard.py
 
-# 2. Configure API keys (edit config/settings.json)
-{
-  "GEMINI_API_KEY": "your-gemini-key",
-  "GMAIL_ADDRESS": "ragsproai@gmail.com",
-  "GMAIL_APP_PASSWORD": "your-16-char-password"
-}
-
-# 3. Run dashboard
-python dashboard_premium.py
-
-# 4. Open browser
-http://localhost:5001
+# Or use the script
+./START_DASHBOARD.sh
 ```
 
-**📖 Complete Guide:** See `START_HERE_MASTER.md` for full documentation
+**Dashboard URL:** http://localhost:5002
 
 ---
 
-## ✨ FEATURES
+## 📊 Current Status
 
-- 🌍 **International Leads:** 51 cities (USA, UK, UAE, Canada, Australia, Europe)
-- 💰 **High-Value Clients:** SaaS, Fintech, Healthcare, Real Estate, E-commerce
-- 🤖 **AI-Powered:** Personalized emails & WhatsApp (Google Gemini)
-- 📊 **Real-Time Dashboard:** Live progress tracking
-- ✅ **Quality Filtering:** Only 70-100/100 quality scores
-- 🆓 **100% FREE Tier:** No API costs (FREE scrapers available)
-- 📧 **Email Automation:** Gmail SMTP (500/day FREE)
-- 💬 **WhatsApp Integration:** Automated messaging
-- 📈 **Bulk Campaigns:** Send to multiple leads at once
-- 📁 **History Tracking:** Date-wise lead storage
-- 📊 **CSV Export:** Download leads anytime
+- ✅ **529 Premium Leads** loaded
+- ✅ **310 Hot Leads** (quality > 85)
+- ✅ **Dark Theme UI** with glassmorphism
+- ✅ **Real-time Generation** with progress tracking
+- ✅ **AI Content Generation** (Gemini)
+- ✅ **WhatsApp & Email** integration
+- ✅ **Export to CSV** functionality
 
 ---
 
-## 🎯 WHAT IT DOES
-
-1. **Scrapes Premium Leads** → Finds high-value businesses in target cities
-2. **AI Content Generation** → Creates personalized emails & WhatsApp messages
-3. **Quality Filtering** → Only serious buyers (70-100/100 scores)
-4. **Automated Outreach** → Sends emails & WhatsApp messages
-5. **Real-Time Tracking** → Monitor everything in dashboard
-
----
-
-## 🔑 REQUIRED API KEYS
-
-| Service | Cost | Purpose | Get It |
-|---------|------|---------|--------|
-| **Gemini API** | FREE | AI content generation | [Get Key](https://makersuite.google.com/app/apikey) |
-| **Gmail App Password** | FREE | Email automation | [Get Key](https://myaccount.google.com/apppasswords) |
-| **SerpAPI** | Optional | Reliable scraping | [Get Key](https://serpapi.com/) |
-
-**Note:** System works without SerpAPI (uses FREE Selenium scraper)
-
----
-
-## 📊 SYSTEM STATUS
-
-**Completion: 95% ✅**
-
-### ✅ Working Features
-- Lead generation (51 cities, 89 categories)
-- AI content generation (Gemini)
-- Quality filtering (70-100 scores)
-- Email automation (Gmail SMTP)
-- WhatsApp integration
-- Real-time dashboard
-- Bulk outreach
-- History tracking
-- CSV export
-- Google Sheets sync
-- Error handling
-- Fallback systems
-
-### 📈 Performance
-- **Lead Quality:** 70-100/100 scores only
-- **Target Markets:** USA, UK, UAE, Canada, Australia
-- **Categories:** 89 business types
-- **Cities:** 51 international cities
-- **Email Limit:** 500/day (Gmail FREE)
-- **AI Limit:** 60 requests/min (Gemini FREE)
-
----
-
-## 💻 TECH STACK
-
-- **Backend:** Python 3.11, Flask
-- **AI:** Google Gemini (FREE)
-- **Scraping:** SerpAPI + Selenium (FREE fallback)
-- **Email:** Gmail SMTP (500/day FREE)
-- **WhatsApp:** WhatsApp Web API
-- **Storage:** JSON + Google Sheets
-- **Frontend:** HTML, CSS, JavaScript
-
----
-
-## 📁 PROJECT STRUCTURE
+## 📁 Project Structure
 
 ```
-.
-├── dashboard_premium.py          # Main dashboard (Flask app)
-├── START_HERE_MASTER.md          # Complete documentation
-├── config/
-│   └── settings.json            # API keys & configuration
-├── src/
-│   ├── main_premium_clients.py  # Lead generation engine
-│   ├── ai_gemini.py             # AI content generation
-│   ├── email_sender.py          # Email automation
-│   ├── whatsapp_sender.py       # WhatsApp automation
-│   ├── queries.py               # 51 cities, 89 categories
-│   ├── lead_quality_filter.py   # Quality scoring
-│   └── scraper.py               # Scraping logic
+lead-genrater/
+├── dashboard.py                    # ⭐ Main entry point (USE THIS)
+├── dashboard_ragspro.py            # Backend Flask app
 ├── templates/
-│   └── premium_dashboard.html   # Dashboard UI
-└── data/
-    ├── premium_leads.json       # Generated leads
-    └── history/                 # Date-wise history
-
-Total: 4,818 lines, 177 files
+│   └── ragspro_dashboard.html      # Dark theme UI
+├── src/                            # All Python modules
+│   ├── scraper.py                  # SerpAPI scraper
+│   ├── ai_gemini.py                # AI content generation
+│   ├── lead_quality_filter.py      # Quality scoring
+│   ├── filters.py                  # Lead filtering
+│   ├── storage.py                  # Data persistence
+│   └── ...
+├── config/
+│   └── settings.json               # API keys & settings
+├── data/
+│   ├── premium_leads.json          # Main leads database
+│   └── history/                    # Date-wise backups
+├── tests/                          # Unit tests
+└── _archive/                       # Old files (archived)
 ```
 
 ---
 
-## 🚀 DEPLOYMENT
+## 🎯 Features
 
-### Option 1: Render.com (Recommended - FREE)
+### **1. Lead Generation**
+- 🌍 Multi-country targeting (USA, UK, UAE, etc.)
+- 🏙️ City-specific search
+- 💼 289 business categories
+- 🎯 Quality threshold (50-100)
+- 🤖 Custom AI prompts
+
+### **2. Lead Management**
+- 🔍 Real-time search
+- 🎛️ Advanced filters (category, city, rating)
+- 📊 Export (CSV, Excel, PDF)
+- 💬 WhatsApp integration
+- 📧 Email integration
+
+### **3. AI Features**
+- 📧 Cold email generation
+- 💬 WhatsApp message generation
+- 📞 Call script generation
+- 💡 Solution recommendations
+- ⚠️ Pain point analysis
+
+---
+
+## 🔧 Configuration
+
+Edit `config/settings.json`:
+
+```json
+{
+  "SERPAPI_KEY": "your_key_here",
+  "GEMINI_API_KEY": "your_key_here",
+  "GMAIL_ADDRESS": "your_email@gmail.com",
+  "GMAIL_APP_PASSWORD": "your_app_password",
+  "MAX_LEADS_PER_RUN": 10,
+  "MIN_RATING": 4.0,
+  "MIN_REVIEWS": 20
+}
+```
+
+---
+
+## 📖 API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/` | GET | Dashboard home |
+| `/api/stats` | GET | Get statistics |
+| `/api/leads` | GET | Get all leads |
+| `/api/leads/hot` | GET | Get hot leads |
+| `/api/leads/today` | GET | Get today's leads |
+| `/api/search?q=` | GET | Search leads |
+| `/api/generate` | POST | Start generation |
+| `/api/stop` | POST | Stop generation |
+| `/api/export/csv` | GET | Export to CSV |
+| `/api/send-whatsapp` | POST | Send WhatsApp |
+| `/api/send-email` | POST | Send email |
+
+---
+
+## 🧪 Testing
+
 ```bash
-# Push to GitHub
-git init
-git add .
-git commit -m "Initial commit"
-git push origin main
+# Test the dashboard
+python3 TEST_RAGSPRO_DASHBOARD.py
 
-# Deploy on Render.com
-# 1. Connect GitHub repo
-# 2. Add environment variables
-# 3. Deploy!
+# Run unit tests
+pytest tests/
 ```
 
-### Option 2: Railway.app (Good - FREE tier)
-Same as Render, just use Railway.app instead
+---
 
-### Option 3: Local + ngrok (Quick Testing)
+## 📦 Dependencies
+
 ```bash
-ngrok http 5001
+pip install -r requirements.txt
 ```
 
-**See `DEPLOY_ONLINE.md` for detailed instructions**
+**Main packages:**
+- Flask 3.0.0
+- google-generativeai 0.8.3
+- beautifulsoup4 4.12.3
+- requests 2.32.5
+- serpapi 0.1.5
 
 ---
 
-## 💰 MONEY-MAKING PLAN
+## 🚀 Deployment
 
-### Month 1: First Clients ($2k-$15k)
-- Generate 100 premium leads
-- Send 20 emails/day
-- Book 5-10 calls
-- Close 1-2 projects
-- **Revenue: $2k-$20k**
-
-### Month 2-3: Scale ($6k-$40k)
-- Use case studies
-- Word of mouth referrals
-- Consistent outreach
-- **Revenue: $6k-$40k**
-
-**See `START_HERE_MASTER.md` for complete strategy**
-
----
-
-## 📋 DOCUMENTATION
-
-| File | Purpose |
-|------|---------|
-| **START_HERE_MASTER.md** | Complete guide (setup, usage, deployment) |
-| **SETUP_AND_RUN.md** | Local setup instructions |
-| **DEPLOY_ONLINE.md** | Cloud deployment guide |
-| **RAGSPRO_QUICK_START.md** | Quick reference |
-| **RAGSPRO_MONEY_MAKING_PLAN.md** | Revenue strategy |
-
----
-
-## 🔧 TROUBLESHOOTING
-
-### Common Issues
-
-**Import Errors:**
+### **Local Development**
 ```bash
-export PYTHONPATH="${PYTHONPATH}:$(pwd)"
-python dashboard_premium.py
+python3 dashboard.py
 ```
 
-**Config Not Found:**
-System has hardcoded fallback. Create `config/settings.json` if needed.
+### **Production (Gunicorn)**
+```bash
+gunicorn -w 4 -b 0.0.0.0:5002 dashboard:app
+```
 
-**Gmail Auth Failed:**
-Use App Password (not regular password). Enable 2FA first.
-
-**No Leads Generated:**
-Check internet connection. Try different queries. Lower quality threshold.
-
-**See `START_HERE_MASTER.md` for complete troubleshooting guide**
-
----
-
-## 📞 CONTACT
+### **Docker**
+```bash
+docker build -t ragspro-dashboard .
+docker run -p 5002:5002 ragspro-dashboard
+```
 
 ---
 
-## 👨‍💻 **About Raghav Shah**
+## 📞 Support
 
-**Founder, Ragspro.com - Software Development Agency**
-
-📞 **Phone:** +918700048490  
-📧 **Email:** ragsproai@gmail.com  
-🌐 **Website:** [ragspro.com](https://ragspro.com)
-
-### **Connect with me:**
-- 💼 **LinkedIn:** [linkedin.com/in/raghavshahhh](https://www.linkedin.com/in/raghavshahhh/)
-- 💻 **GitHub:** [github.com/raghavshahhhh](https://github.com/raghavshahhhh)
-- 📸 **Instagram:** [instagram.com/raghavshahhhh](https://www.instagram.com/raghavshahhhh)
-- 🎥 **YouTube:** [youtube.com/@raghavshahhhh](https://www.youtube.com/@raghavshahhhh)
-- 🐦 **Twitter:** [x.com/raghavshahhhh](https://x.com/raghavshahhhh)
-- 💼 **Fiverr:** [fiverr.com/s/WEpRvR7](https://www.fiverr.com/s/WEpRvR7)
+- **Dashboard:** http://localhost:5002
+- **Documentation:** See `API_DOCUMENTATION.md`
+- **Quick Start:** See `RAGSPRO_QUICK_START.md`
 
 ---
 
-**Made with 🔥 by Raghav Shah for Ragspro.com**
+## 📝 License
 
-
-**Raghav Shah**
-Founder, Ragspro.com - Software Development Agency
-
-📞 **Phone:** +918700048490  
-📧 **Email:** ragsproai@gmail.com  
-🌐 **Website:** [ragspro.com](https://ragspro.com)  
-📅 **Book Call:** [calendly.com/ragsproai](https://calendly.com/ragsproai)
-
-### Connect with me:
-- 💼 **LinkedIn:** [linkedin.com/in/raghavshahhh](https://www.linkedin.com/in/raghavshahhh/)
-- 💻 **GitHub:** [github.com/raghavshahhhh](https://github.com/raghavshahhhh)
-- 📸 **Instagram:** [instagram.com/raghavshahhhh](https://www.instagram.com/raghavshahhhh)
-- 🎥 **YouTube:** [youtube.com/@raghavshahhhh](https://www.youtube.com/@raghavshahhhh)
-- 🐦 **Twitter:** [x.com/raghavshahhhh](https://x.com/raghavshahhhh)
-- 💼 **Fiverr:** [fiverr.com/s/WEpRvR7](https://www.fiverr.com/s/WEpRvR7)
+MIT License - See LICENSE file for details
 
 ---
 
-## 📄 LICENSE
-
-Private - For Ragspro.com use only.
-
----
-
-**Made with 🔥 by Raghav Shah**
-
-**System Status: 95% Complete ✅**  
-**Production Ready: YES ✅**  
-**Money-Making Ready: YES ✅**
+**Made with ❤️ by RagsPro Team**

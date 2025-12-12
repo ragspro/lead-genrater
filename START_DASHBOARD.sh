@@ -1,24 +1,13 @@
 #!/bin/bash
+# DEFAULT DASHBOARD STARTER - Always use this!
 
-echo "🚀 Starting Lead Generation Dashboard..."
-echo "=" 
-echo ""
-echo "📊 Dashboard will open at: http://localhost:5000"
-echo "🔥 Features:"
-echo "   ✅ One-click lead generation"
-echo "   ✅ Real-time data display"
-echo "   ✅ Search functionality"
-echo "   ✅ Beautiful modern UI"
-echo "   ✅ Auto-refresh every 30 seconds"
-echo ""
-echo "=" 
+echo "╔══════════════════════════════════════════════════════════╗"
+echo "║           RAGSPRO DASHBOARD - STARTING...                ║"
+echo "╚══════════════════════════════════════════════════════════╝"
 echo ""
 
-# Activate virtual environment
-source .venv/bin/activate
+# Kill any existing process on port 5002
+lsof -ti:5002 | xargs kill -9 2>/dev/null
 
-# Set Python path
-export PYTHONPATH=.
-
-# Start dashboard
-python dashboard.py
+# Start the DEFAULT dashboard
+python3 dashboard.py

@@ -1,0 +1,3100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAGSPRO - Client Acquisition System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0F0F14;
+            color: #E5E7EB;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(79, 70, 229, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+            animation: gradientShift 15s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 22px;
+            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.25);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 35px rgba(124, 58, 237, 0.35);
+            border-color: rgba(124, 58, 237, 0.3);
+        }
+        
+        /* Hero Section - Compact */
+        .hero {
+            padding: 30px 30px;
+            text-align: center;
+            margin-bottom: 25px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+        
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .hero-logo {
+            font-size: 2.5em;
+            font-weight: 900;
+            background: linear-gradient(135deg, #7C3AED 0%, #4F46E5 50%, #0EA5E9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.03em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 60px rgba(124, 58, 237, 0.5);
+            animation: glow 3s ease-in-out infinite;
+        }
+        
+        @keyframes glow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.2); }
+        }
+        
+        .hero-subtitle {
+            font-size: 1.05em;
+            color: #9CA3AF;
+            font-weight: 500;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.4;
+        }
+        
+        /* Stats Grid - Compact */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-bottom: 25px;
+        }
+        
+        .stat-cube {
+            padding: 20px 16px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.6s ease-out backwards;
+        }
+        
+        .stat-cube::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 4px;
+            background: linear-gradient(90deg, #7C3AED, #4F46E5, #0EA5E9);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+        
+        .stat-cube:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .stat-cube:nth-child(1) { animation-delay: 0.1s; }
+        .stat-cube:nth-child(2) { animation-delay: 0.2s; }
+        .stat-cube:nth-child(3) { animation-delay: 0.3s; }
+        .stat-cube:nth-child(4) { animation-delay: 0.4s; }
+        .stat-cube:nth-child(5) { animation-delay: 0.5s; }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .stat-icon {
+            font-size: 1.8em;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 0 10px rgba(124, 58, 237, 0.5));
+        }
+        
+        .stat-value {
+            font-size: 2em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #7C3AED 0%, #0EA5E9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 6px;
+            letter-spacing: -0.02em;
+        }
+        
+        .stat-label {
+            color: #9CA3AF;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Hot Leads Badge - Compact */
+        .hot-badge {
+            background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.7em;
+            font-weight: 700;
+            display: inline-block;
+            margin-top: 6px;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        /* Generate Form - Compact Layout */
+        .generate-section {
+            padding: 25px 30px;
+            margin-bottom: 30px;
+            animation: fadeInUp 0.6s ease-out 0.3s backwards;
+        }
+        
+        .section-title {
+            font-size: 1.6em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #7C3AED 0%, #0EA5E9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .form-field {
+            position: relative;
+        }
+        
+        .form-label {
+            display: block;
+            color: #D1D5DB;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 0.9em;
+        }
+        
+        .form-input, .form-select {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #E5E7EB;
+            font-size: 0.95em;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #7C3AED;
+            background: rgba(124, 58, 237, 0.1);
+            box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.2);
+        }
+        
+        .form-select option {
+            background: #1E1E2F;
+            color: #E5E7EB;
+        }
+        
+        /* Gradient Glow Buttons - Compact */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.95em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Inter', sans-serif;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(124, 58, 237, 0.6);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #E5E7EB;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+        }
+        
+        .btn-info {
+            background: linear-gradient(135deg, #0EA5E9 0%, #0284C7 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(14, 165, 233, 0.4);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        /* Progress Bar - Compact */
+        .progress-bar {
+            width: 100%;
+            height: 35px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 18px;
+            overflow: hidden;
+            margin: 15px 0;
+            display: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .progress-bar.active {
+            display: block;
+            animation: slideIn 0.4s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #7C3AED 0%, #4F46E5 50%, #0EA5E9 100%);
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 0.95em;
+            position: relative;
+        }
+        
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        /* Leads Section - Compact */
+        .leads-section {
+            padding: 25px 30px;
+            animation: fadeInUp 0.6s ease-out 0.4s backwards;
+        }
+        
+        .search-filter-bar {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            padding: 16px 20px 16px 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            color: #E5E7EB;
+            font-size: 1.05em;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%237C3AED" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>');
+            background-repeat: no-repeat;
+            background-position: 18px center;
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: #7C3AED;
+            background-color: rgba(124, 58, 237, 0.1);
+            box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.2);
+        }
+        
+        .filter-select {
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            color: #E5E7EB;
+            font-size: 1em;
+            font-family: 'Inter', sans-serif;
+            min-width: 180px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: #7C3AED;
+            background: rgba(124, 58, 237, 0.1);
+        }
+        
+        /* Lead Card */
+        .lead-card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 24px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .lead-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 3px;
+            background: linear-gradient(90deg, #7C3AED, #4F46E5, #0EA5E9);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+        
+        .lead-card:hover {
+            border-color: rgba(124, 58, 237, 0.4);
+            box-shadow: 0 12px 35px rgba(124, 58, 237, 0.25);
+            transform: translateY(-4px);
+        }
+        
+        .lead-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .lead-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 20px;
+            gap: 20px;
+        }
+        
+        .lead-title h3 {
+            color: #F9FAFB;
+            font-size: 1.6em;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.01em;
+        }
+        
+        .lead-title p {
+            color: #9CA3AF;
+            font-size: 1.05em;
+            font-weight: 500;
+        }
+        
+        .quality-badge {
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 1.15em;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            letter-spacing: -0.01em;
+            white-space: nowrap;
+        }
+        
+        .quality-excellent {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: white;
+        }
+        
+        .quality-good {
+            background: linear-gradient(135deg, #0EA5E9 0%, #0284C7 100%);
+            color: white;
+        }
+        
+        .quality-medium {
+            background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+            color: white;
+        }
+        
+        .lead-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #D1D5DB;
+        }
+        
+        .detail-item strong {
+            background: linear-gradient(135deg, #7C3AED 0%, #0EA5E9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+        
+        /* Info Boxes */
+        .info-box {
+            border-radius: 14px;
+            padding: 18px;
+            margin: 16px 0;
+            border-left: 4px solid;
+        }
+        
+        .info-box-ai {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: #3B82F6;
+        }
+        
+        .info-box-pain {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: #F59E0B;
+        }
+        
+        .info-box-solution {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: #10B981;
+        }
+        
+        .info-box strong {
+            color: #F9FAFB;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.05em;
+        }
+        
+        .info-box p, .info-box li {
+            color: #D1D5DB;
+            line-height: 1.6;
+        }
+        
+        /* Content Tabs */
+        .content-tabs {
+            display: flex;
+            gap: 12px;
+            margin: 20px 0 16px;
+            flex-wrap: wrap;
+        }
+        
+        .tab-btn {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #D1D5DB;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn:hover {
+            border-color: #7C3AED;
+            background: rgba(124, 58, 237, 0.1);
+        }
+        
+        .tab-btn.active {
+            background: linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+        }
+        
+        .content-body {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 24px;
+            color: #D1D5DB;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+        
+        /* Status Badge */
+        .status-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 700;
+            margin-left: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-new {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60A5FA;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        
+        .status-contacted {
+            background: rgba(245, 158, 11, 0.2);
+            color: #FBBF24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        
+        .status-sent {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34D399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+        }
+        
+        .empty-state h3 {
+            font-size: 2em;
+            font-weight: 700;
+            color: #F9FAFB;
+            margin-bottom: 12px;
+        }
+        
+        .empty-state p {
+            color: #9CA3AF;
+            font-size: 1.1em;
+        }
+        
+        /* Loading Spinner */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .spinner {
+            border: 5px solid rgba(255, 255, 255, 0.1);
+            border-top: 5px solid #7C3AED;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #6D28D9 0%, #4338CA 100%);
+        }
+        
+        /* Responsive - Optimized for compact layout */
+        @media (max-width: 1400px) {
+            .stats-grid { grid-template-columns: repeat(3, 1fr); }
+            .form-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        
+        @media (max-width: 1024px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .form-grid { grid-template-columns: 1fr; }
+        }
+        
+        @media (max-width: 768px) {
+            .container { padding: 15px 10px; }
+            .hero { padding: 20px 15px; }
+            .hero-logo { font-size: 2em; }
+            .hero-subtitle { font-size: 0.95em; }
+            .stats-grid { grid-template-columns: 1fr; gap: 12px; }
+            .generate-section, .leads-section { padding: 20px 15px; }
+            .form-grid { grid-template-columns: 1fr; }
+            .search-filter-bar { flex-direction: column; }
+            .search-box { min-width: 100%; }
+            .lead-header { flex-direction: column; }
+            .action-buttons { flex-direction: column; }
+            .btn { width: 100%; }
+        }
+        
+        /* Notification Toast */
+        .notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 18px 28px;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 1.05em;
+            z-index: 10000;
+            animation: slideInRight 0.4s ease-out;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .notification-success {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: white;
+        }
+        
+        .notification-error {
+            background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+            color: white;
+        }
+        
+        .notification-info {
+            background: linear-gradient(135deg, #0EA5E9 0%, #0284C7 100%);
+            color: white;
+        }
+    
+        .action-buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+        
+        .action-buttons-grid .btn {
+            width: 100%;
+            padding: 14px 20px !important;
+            font-size: 0.95em;
+            white-space: nowrap;
+        }
+    
+
+        /* Checkbox Selection Styles */
+        .lead-checkbox {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            z-index: 10;
+        }
+        
+        .lead-card.selected {
+            border: 3px solid #7C3AED;
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.5);
+        }
+        
+        .bulk-actions-bar {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 1000;
+            animation: slideUp 0.3s ease;
+        }
+        
+        .bulk-actions-bar.show {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateX(-50%) translateY(100px); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+        
+        .bulk-action-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .bulk-action-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+        
+        .selection-count {
+            color: white;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-right: 10px;
+        }
+
+    
+        /* Settings Modal */
+        .settings-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 10000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .settings-modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .settings-container {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(124, 58, 237, 0.3);
+        }
+        
+        .settings-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
+        
+        .settings-tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            color: #9CA3AF;
+            cursor: pointer;
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .settings-tab.active {
+            color: #7C3AED;
+            border-bottom-color: #7C3AED;
+        }
+        
+        .settings-tab:hover {
+            color: #A78BFA;
+        }
+        
+        .settings-content {
+            display: none;
+        }
+        
+        .settings-content.active {
+            display: block;
+        }
+        
+        .settings-group {
+            margin-bottom: 25px;
+        }
+        
+        .settings-label {
+            display: block;
+            color: #E5E7EB;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+        
+        .settings-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(124, 58, 237, 0.3);
+            border-radius: 12px;
+            color: white;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+        
+        .settings-input:focus {
+            outline: none;
+            border-color: #7C3AED;
+            background: rgba(255,255,255,0.08);
+        }
+        
+        .settings-textarea {
+            min-height: 200px;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+        }
+        
+        .settings-save-btn {
+            background: linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%);
+            color: white;
+            padding: 14px 32px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+        
+        .settings-save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.4);
+        }
+        
+        .settings-hint {
+            color: #9CA3AF;
+            font-size: 0.85em;
+            margin-top: 6px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero glass-card">
+            <div class="hero-logo">⚡ RAGSPRO</div>
+            <div class="hero-subtitle">
+                AI-Powered Client Acquisition System | Automated Lead Generation & Outreach
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-cube glass-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-value" id="stat-total">0</div>
+                <div class="stat-label">Total Leads</div>
+            </div>
+            
+            <div class="stat-cube glass-card">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-value" id="stat-quality">0</div>
+                <div class="stat-label">Avg Quality</div>
+            </div>
+            
+            <div class="stat-cube glass-card">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-value" id="stat-rating">0</div>
+                <div class="stat-label">Avg Rating</div>
+            </div>
+            
+            <div class="stat-cube glass-card">
+                <div class="stat-icon">🔥</div>
+                <div class="stat-value" id="stat-hot">0</div>
+                <div class="stat-label">Hot Leads</div>
+                <div class="hot-badge" id="hot-badge">🚀 URGENT</div>
+            </div>
+            
+            <div class="stat-cube glass-card">
+                <div class="stat-icon">📅</div>
+                <div class="stat-value" id="stat-today">0</div>
+                <div class="stat-label">Today's Leads</div>
+            </div>
+        </div>
+
+        <!-- Generate Section -->
+        <div class="generate-section glass-card">
+            <h2 class="section-title">🚀 Generate Premium Leads</h2>
+            
+            <div class="form-grid">
+                <div class="form-field">
+                    <label class="form-label">🌍 Country</label>
+                    <select id="target-markets" class="form-select" onchange="updateCityOptions()">
+                        <option value="">🌎 All Countries</option>
+                        <optgroup label="🔥 TIER 1 - Highest Paying">
+                            <option value="USA">🇺🇸 USA</option>
+                            <option value="UK">🇬🇧 UK</option>
+                            <option value="UAE">🇦🇪 UAE</option>
+                            <option value="Canada">🇨🇦 Canada</option>
+                            <option value="Australia">🇦🇺 Australia</option>
+                            <option value="Singapore">🇸🇬 Singapore</option>
+                            <option value="Switzerland">🇨🇭 Switzerland</option>
+                        </optgroup>
+                        <optgroup label="💰 TIER 2 - High Paying">
+                            <option value="France">🇫🇷 France</option>
+                            <option value="Germany">🇩🇪 Germany</option>
+                            <option value="Netherlands">🇳🇱 Netherlands</option>
+                            <option value="India">🇮🇳 India</option>
+                            <option value="Saudi Arabia">🇸🇦 Saudi Arabia</option>
+                            <option value="Japan">🇯🇵 Japan</option>
+                        </optgroup>
+                        <optgroup label="📈 TIER 3 - Good Volume">
+                            <option value="Spain">🇪🇸 Spain</option>
+                            <option value="Italy">🇮🇹 Italy</option>
+                            <option value="South Africa">🇿🇦 South Africa</option>
+                        </optgroup>
+                    </select>
+                </div>
+                
+                <div class="form-field">
+                    <label class="form-label">🏙️ City</label>
+                    <select id="target-cities" class="form-select" multiple style="height: 100px;">
+                        <option value="">🌎 All Cities</option>
+                    </select>
+                </div>
+                
+                <div class="form-field">
+                    <label class="form-label">💼 Business Types</label>
+                    <select id="business-types" class="form-select" multiple style="height: 100px;">
+                    <option value="">🎯 All Business Types (289 categories)</option>
+                    <optgroup label="💻 Tech & Software (20+ types)">
+                        <option value="SaaS company">SaaS Company</option>
+                        <option value="tech startup">Tech Startup</option>
+                        <option value="software company">Software Company</option>
+                        <option value="fintech company">Fintech Company</option>
+                        <option value="AI company">AI Company</option>
+                        <option value="e-commerce platform">E-commerce Platform</option>
+                    </optgroup>
+                    <optgroup label="💰 Finance & Investment (19+ types)">
+                        <option value="investment firm">Investment Firm</option>
+                        <option value="hedge fund">Hedge Fund</option>
+                        <option value="private equity">Private Equity</option>
+                        <option value="wealth management">Wealth Management</option>
+                        <option value="venture capital">Venture Capital</option>
+                    </optgroup>
+                    <optgroup label="⚖️ Professional Services (18+ types)">
+                        <option value="law firm">Law Firm</option>
+                        <option value="accounting firm">Accounting Firm</option>
+                        <option value="consulting firm">Consulting Firm</option>
+                        <option value="management consulting">Management Consulting</option>
+                    </optgroup>
+                    <optgroup label="🏥 Healthcare (24+ types)">
+                        <option value="cosmetic surgery">Cosmetic Surgery</option>
+                        <option value="plastic surgery">Plastic Surgery</option>
+                        <option value="dental clinic">Dental Clinic</option>
+                        <option value="medical clinic">Medical Clinic</option>
+                        <option value="fertility clinic">Fertility Clinic</option>
+                    </optgroup>
+                    <optgroup label="🏢 Real Estate (12+ types)">
+                        <option value="real estate agency">Real Estate Agency</option>
+                        <option value="luxury real estate">Luxury Real Estate</option>
+                        <option value="commercial real estate">Commercial Real Estate</option>
+                        <option value="property management">Property Management</option>
+                    </optgroup>
+                    <optgroup label="🛍️ E-commerce & Retail (18+ types)">
+                        <option value="luxury boutique">Luxury Boutique</option>
+                        <option value="jewelry store">Jewelry Store</option>
+                        <option value="fashion brand">Fashion Brand</option>
+                        <option value="online store">Online Store</option>
+                    </optgroup>
+                    <optgroup label="🏨 Hospitality (18+ types)">
+                        <option value="luxury hotel">Luxury Hotel</option>
+                        <option value="boutique hotel">Boutique Hotel</option>
+                        <option value="resort">Resort</option>
+                        <option value="travel agency">Travel Agency</option>
+                    </optgroup>
+                    <optgroup label="🍽️ Food & Beverage (17+ types)">
+                        <option value="fine dining restaurant">Fine Dining Restaurant</option>
+                        <option value="restaurant chain">Restaurant Chain</option>
+                        <option value="cafe chain">Cafe Chain</option>
+                        <option value="catering company">Catering Company</option>
+                    </optgroup>
+                </select>
+                </div>
+                
+                <div class="form-field">
+                    <label class="form-label">📊 Leads</label>
+                    <input type="number" id="num-leads" class="form-input" value="5" min="1" max="500">
+                </div>
+                
+                <div class="form-field">
+                    <label class="form-label">🎯 Quality</label>
+                    <input type="number" id="quality-threshold" class="form-input" value="70" min="50" max="100">
+                </div>
+            </div>
+            
+            <!-- AI Prompt Editor - Full Width -->
+            <div class="form-field" style="margin-top: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <label class="form-label">🤖 AI Prompt Template</label>
+                    <button class="btn btn-secondary" onclick="resetAIPrompt()" style="padding: 6px 14px; font-size: 0.85em;">
+                        🔄 Reset
+                    </button>
+                </div>
+                <textarea id="ai-prompt" class="form-input" style="height: 80px; resize: vertical; font-family: 'Inter', monospace; font-size: 0.85em;" placeholder="Enter custom AI prompt...">You are writing on behalf of Ragspro.com - a premium software development agency.
+
+Generate a professional, SHORT cold email (under 100 words) for this prospect:
+
+Business: {business_name}
+Type: {business_type}
+Location: {city}
+Rating: {rating}★ ({reviews} reviews)
+
+RAGSPRO VALUE PROPOSITION:
+- Fast MVP delivery (2-4 weeks)
+- Modern tech stack (React, Node.js, Python, AWS)
+- Transparent pricing ($5k-$50k projects)
+- 100% satisfaction guarantee
+
+Keep it conversational, highlight their pain points, and include a clear call-to-action.</textarea>
+            </div>
+            
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px;">
+                <button class="btn btn-primary" id="generate-btn" onclick="startGeneration()">
+                    🚀 Generate
+                </button>
+                <button class="btn btn-danger" id="stop-btn" onclick="stopGeneration()" style="display: none;">
+                    🛑 Stop
+                </button>
+                <button class="btn btn-secondary" onclick="viewHistory()">
+                    📅 History
+                </button>
+                <a href="/api/export/csv" class="btn btn-success" style="text-decoration: none;">
+                    📊 CSV
+                </a>
+            </div>
+            
+            <div class="progress-bar" id="progress-bar">
+                <div class="progress-fill" id="progress-fill">0%</div>
+            </div>
+            
+            <div id="status-message"></div>
+        </div>
+
+        <!-- Leads Section -->
+        <div class="leads-section glass-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 16px;">
+                <h2 class="section-title" style="margin: 0;">💼 Premium Leads</h2>
+                <button class="btn btn-secondary" onclick="showAllHistory()" style="font-size: 0.9em; padding: 12px 24px;">
+                    📊 Total: <span id="total-leads-count">0</span>
+                </button>
+            </div>
+            
+            <div class="search-filter-bar">
+                <input type="text" class="search-box" id="search-box" placeholder="🔍 Search leads...">
+                
+                <select id="filter-category" class="filter-select">
+                    <option value="">All Categories</option>
+                </select>
+                
+                <select id="filter-city" class="filter-select">
+                    <option value="">All Cities</option>
+                </select>
+                
+                <select id="filter-rating" class="filter-select">
+                    <option value="">All Ratings</option>
+                    <option value="4.5">4.5+ ⭐⭐⭐⭐⭐</option>
+                    <option value="4.0">4.0+ ⭐⭐⭐⭐</option>
+                    <option value="3.5">3.5+ ⭐⭐⭐</option>
+                </select>
+                
+                <button class="btn btn-secondary" onclick="clearFilters()" style="padding: 16px 24px;">
+                    🔄 Clear
+                </button>
+                
+                <button class="btn btn-info" onclick="showAllLeads()" style="padding: 16px 24px;">
+                <button class="btn btn-success" onclick="exportCSV()" style="padding: 16px 24px;">
+                    📥 Export CSV
+                </button>
+                
+                <button class="btn btn-success" onclick="exportExcel()" style="padding: 16px 24px;">
+                    📊 Export Excel
+                </button>
+                
+                <button class="btn btn-success" onclick="exportPDF()" style="padding: 16px 24px;">
+                    📄 Export PDF
+                </button>
+                
+                <button class="btn btn-danger" onclick="showHotLeads()" style="padding: 16px 24px;">
+                    🔥 Hot Leads
+                </button>
+                
+                <button class="btn btn-info" onclick="showTodaysLeads()" style="padding: 16px 24px;">
+                    📅 Today
+                </button>
+                
+                <button class="btn btn-secondary" onclick="showAnalytics()" style="padding: 16px 24px;">
+                    📊 Analytics
+                </button>
+                
+                <button class="btn btn-primary" onclick="startBulkCampaign()" style="padding: 16px 24px;">
+                    📧 Bulk Campaign
+                </button>
+                
+                <button class="btn btn-info" onclick="searchLinkedIn()" style="padding: 16px 24px;">
+                    🔗 LinkedIn
+                </button>
+                
+                <button class="btn btn-secondary" onclick="scanWebsite()" style="padding: 16px 24px;">
+                    🔍 Scan Website
+                </button>
+                
+                <button class="btn btn-primary" onclick="showAllHistory()" style="padding: 16px 24px;">
+                    📋 Show All
+                </button>
+            </div>
+            
+            
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; background: rgba(124, 58, 237, 0.1); padding: 12px 20px; border-radius: 12px;">
+                    <input type="checkbox" id="select-all-checkbox" onchange="toggleSelectAll(this.checked)" style="width: 20px; height: 20px; cursor: pointer;">
+                    <span style="font-weight: 600;">Select All Leads</span>
+                </label>
+                <span id="selection-counter" style="color: #9CA3AF; font-weight: 600;"></span>
+            </div>
+
+            <div id="leads-container">
+                <div class="empty-state">
+                    <h3>No leads yet</h3>
+                    <p>Click "Generate Leads" above to start finding high-paying clients!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allLeads = [];
+        let displayedLeads = [];
+        let currentPage = 0;
+        const leadsPerPage = 5;
+        let statusCheckInterval = null;
+        let isGenerating = false;
+
+        // Load on page load
+        window.addEventListener('load', () => {
+            loadStats();
+            loadLeads();
+            loadHotLeads();
+            loadTodaysLeads();
+        });
+
+        // Search and filter
+        document.getElementById('search-box').addEventListener('input', applyFilters);
+        document.getElementById('filter-category').addEventListener('change', applyFilters);
+        document.getElementById('filter-city').addEventListener('change', applyFilters);
+        document.getElementById('filter-rating').addEventListener('change', applyFilters);
+
+        function applyFilters() {
+            const searchQuery = document.getElementById('search-box').value.toLowerCase();
+            const categoryFilter = document.getElementById('filter-category').value.toLowerCase();
+            const cityFilter = document.getElementById('filter-city').value.toLowerCase();
+            const ratingFilter = parseFloat(document.getElementById('filter-rating').value) || 0;
+            
+            const filtered = allLeads.filter(lead => {
+                const matchesSearch = !searchQuery || 
+                    lead.title.toLowerCase().includes(searchQuery) ||
+                    lead.type.toLowerCase().includes(searchQuery) ||
+                    lead.address.toLowerCase().includes(searchQuery);
+                
+                const matchesCategory = !categoryFilter || 
+                    lead.type.toLowerCase().includes(categoryFilter);
+                
+                const matchesCity = !cityFilter || 
+                    lead.address.toLowerCase().includes(cityFilter);
+                
+                const matchesRating = !ratingFilter || 
+                    (lead.rating && lead.rating >= ratingFilter);
+                
+                return matchesSearch && matchesCategory && matchesCity && matchesRating;
+            });
+            
+            currentPage = 0;
+            displayedLeads = [];
+            displayLeads(filtered);
+        }
+
+        function clearFilters() {
+            document.getElementById('search-box').value = '';
+            document.getElementById('filter-category').value = '';
+            document.getElementById('filter-city').value = '';
+            document.getElementById('filter-rating').value = '';
+            currentPage = 0;
+            displayedLeads = [];
+            displayLeads(allLeads);
+        }
+
+        function showAllLeads() {
+            currentPage = 0;
+            displayedLeads = [];
+            const container = document.getElementById('leads-container');
+            
+            if (allLeads.length === 0) {
+                container.innerHTML = '<div class="empty-state"><h3>No leads found</h3><p>Try generating some premium leads!</p></div>';
+                return;
+            }
+            
+            displayedLeads = allLeads;
+            const leadsHTML = allLeads.map((lead, index) => generateLeadCardHTML(lead, index)).join('');
+            container.innerHTML = leadsHTML + `
+                <div style="text-align: center; margin: 30px 0;">
+                    <p style="color: #9CA3AF; font-weight: 600; font-size: 1.1em;">
+                        ✅ All ${allLeads.length} leads displayed
+                    </p>
+                </div>
+            `;
+        }
+
+        function populateFilterOptions() {
+            const categories = [...new Set(allLeads.map(lead => lead.type))].sort();
+            const categorySelect = document.getElementById('filter-category');
+            categorySelect.innerHTML = '<option value="">All Categories</option>';
+            categories.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat;
+                option.textContent = cat;
+                categorySelect.appendChild(option);
+            });
+            
+            const cities = [...new Set(allLeads.map(lead => {
+                const match = lead.address.match(/([A-Za-z\s]+)(?:,|\s+\d)/);
+                return match ? match[1].trim() : '';
+            }).filter(Boolean))].sort();
+            
+            const citySelect = document.getElementById('filter-city');
+            citySelect.innerHTML = '<option value="">All Cities</option>';
+            cities.forEach(city => {
+                const option = document.createElement('option');
+                option.value = city;
+                option.textContent = city;
+                citySelect.appendChild(option);
+            });
+        }
+
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/stats');
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('stat-total').textContent = data.stats.total_leads;
+                    document.getElementById('stat-quality').textContent = data.stats.avg_quality + '/100';
+                    document.getElementById('stat-rating').textContent = data.stats.avg_rating + '⭐';
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        async function loadHotLeads() {
+            try {
+                const response = await fetch('/api/leads/hot');
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('stat-hot').textContent = data.total || 0;
+                    const badge = document.getElementById('hot-badge');
+                    if (data.total > 0) {
+                        badge.textContent = `🚀 ${data.total} URGENT`;
+                        badge.style.display = 'inline-block';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading hot leads:', error);
+            }
+        }
+
+        async function loadTodaysLeads() {
+            try {
+                const response = await fetch('/api/leads/today');
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('stat-today').textContent = data.leads.length || 0;
+                }
+            } catch (error) {
+                console.error('Error loading today\'s leads:', error);
+            }
+        }
+
+        async function loadLeads() {
+            const container = document.getElementById('leads-container');
+            
+            try {
+                container.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading leads...</p></div>';
+
+                const response = await fetch('/api/leads');
+                const data = await response.json();
+
+                if (!data.success) {
+                    container.innerHTML = '<div class="empty-state"><h3>❌ Error</h3><p>' + (data.error || 'Failed to load leads') + '</p></div>';
+                    return;
+                }
+
+                // CRITICAL FIX: Ensure leads is always an array
+                allLeads = Array.isArray(data.leads) ? data.leads : [];
+                
+                console.log('✅ Loaded leads:', allLeads.length);
+                
+                if (allLeads.length === 0) {
+                    container.innerHTML = '<div class="empty-state"><h3>📭 No Leads Yet</h3><p>Click "Generate" to create premium leads!</p></div>';
+                    document.getElementById('total-leads-count').textContent = '0';
+                    return;
+                }
+
+                // Update total count
+                document.getElementById('total-leads-count').textContent = allLeads.length;
+
+                // Populate filter options
+                populateFilterOptions();
+
+                // Reset display and show leads
+                currentPage = 0;
+                displayedLeads = [];
+                displayLeads(allLeads);
+                
+                showNotification(`✅ Loaded ${allLeads.length} leads`, 'success');
+
+            } catch (error) {
+                console.error('Load leads error:', error);
+                container.innerHTML = '<div class="empty-state"><h3>❌ Error</h3><p>Failed to load leads: ' + error.message + '</p></div>';
+                showNotification('❌ Failed to load leads', 'error');
+            }
+        }
+
+        function generateLeadCardHTML(lead, index) {
+            const analysis = lead.deep_analysis || {};
+            const solutions = analysis.ragspro_solutions || {};
+            const painPoints = analysis.pain_points || [];
+            
+            // Auto-generate AI content if not present
+            if (!lead.ai_content) {
+                setTimeout(() => generateAIContentForLead(index), 100);
+            }
+            
+            return `
+                <div class="lead-card">
+                    <div class="lead-header">
+                        <div class="lead-title">
+                            <h3>
+                                ${lead.title}
+                                ${lead.ai_researched ? '<span class="status-badge status-sent">🤖 AI Analyzed</span>' : ''}
+                                ${lead.status ? `<span class="status-badge status-${getStatusClass(lead.status)}">${lead.status}</span>` : ''}
+                            </h3>
+                            <p>${lead.type} • ${lead.address}</p>
+                        </div>
+                        <div class="quality-badge ${getQualityClass(lead.quality_score)}">
+                            ${lead.quality_score}/100
+                        </div>
+                    </div>
+
+                    <div class="lead-details">
+                        <div class="detail-item">
+                            <strong>⭐ Rating:</strong> ${lead.rating || 'N/A'} (${lead.reviews || 0} reviews)
+                        </div>
+                        <div class="detail-item">
+                            <strong>📞 Phone:</strong> ${lead.phone ? `<a href="tel:${lead.phone}" style="color: #0EA5E9;">${lead.phone}</a>` : 'N/A'}
+                        </div>
+                        <div class="detail-item">
+                            <strong>📧 Email:</strong> ${lead.email ? `<a href="mailto:${lead.email}" style="color: #0EA5E9;">${lead.email}</a>` : 'N/A'}
+                        </div>
+                        <div class="detail-item">
+                            <strong>🌐 Website:</strong> ${lead.website ? `<a href="${lead.website}" target="_blank" style="color: #0EA5E9;">Visit</a>` : 'None'}
+                        </div>
+                        ${analysis.priority_score ? `
+                        <div class="detail-item">
+                            <strong>🎯 Priority:</strong> ${analysis.priority_score}/100
+                        </div>
+                        ` : ''}
+                        ${analysis.estimated_budget ? `
+                        <div class="detail-item">
+                            <strong>💰 Budget:</strong> ${analysis.estimated_budget.range}
+                        </div>
+                        ` : ''}
+                    </div>
+                    
+                    ${lead.social_media ? `
+                    <div class="info-box" style="background: rgba(124, 58, 237, 0.1); border-color: #7C3AED; margin-top: 16px;">
+                        <strong>🔗 Social Media Links</strong>
+                        <div style="display: flex; gap: 12px; margin-top: 10px; flex-wrap: wrap;">
+                            ${lead.social_media.linkedin ? `<a href="${lead.social_media.linkedin}" target="_blank" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.9em;">💼 LinkedIn</a>` : ''}
+                            ${lead.social_media.facebook ? `<a href="${lead.social_media.facebook}" target="_blank" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.9em;">📘 Facebook</a>` : ''}
+                            ${lead.social_media.instagram ? `<a href="${lead.social_media.instagram}" target="_blank" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.9em;">📸 Instagram</a>` : ''}
+                            ${lead.social_media.twitter ? `<a href="${lead.social_media.twitter}" target="_blank" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.9em;">🐦 Twitter</a>` : ''}
+                            ${lead.social_media.youtube ? `<a href="${lead.social_media.youtube}" target="_blank" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.9em;">📺 YouTube</a>` : ''}
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    ${analysis.ai_insights ? `
+                    <div class="info-box info-box-ai">
+                        <strong>🤖 AI Insights</strong>
+                        <p>${analysis.ai_insights}</p>
+                    </div>
+                    ` : ''}
+
+                    ${painPoints.length > 0 ? `
+                    <div class="info-box info-box-pain">
+                        <strong>⚠️ Pain Points</strong>
+                        <ul style="margin-top: 8px; padding-left: 20px;">
+                            ${painPoints.slice(0, 3).map(point => `<li style="margin: 5px 0;">${point}</li>`).join('')}
+                        </ul>
+                    </div>
+                    ` : ''}
+
+                    ${solutions.immediate && solutions.immediate.length > 0 ? `
+                    <div class="info-box info-box-solution">
+                        <strong>💡 RagsPro Solutions</strong>
+                        <div style="margin-top: 10px;">
+                            ${solutions.immediate.slice(0, 2).map(sol => `
+                                <div style="background: rgba(255, 255, 255, 0.05); padding: 12px; border-radius: 10px; margin: 8px 0;">
+                                    <strong style="color: #34D399;">${sol.title}</strong>
+                                    <p style="font-size: 0.9em; margin: 5px 0;">${sol.description}</p>
+                                    <div style="display: flex; gap: 15px; margin-top: 5px; font-size: 0.85em;">
+                                        <span>⏱️ ${sol.timeline}</span>
+                                        <span>💰 ${sol.price}</span>
+                                        <span>📈 ROI: ${sol.roi}</span>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    <div class="content-tabs">
+                        <button class="tab-btn active" onclick="showTab(${index}, 'email')">📧 Email</button>
+                        <button class="tab-btn" onclick="showTab(${index}, 'whatsapp')">💬 WhatsApp</button>
+                        <button class="tab-btn" onclick="showTab(${index}, 'call')">📞 Call Script</button>
+                        ${analysis.ragspro_solutions ? `<button class="tab-btn" onclick="showTab(${index}, 'solutions')">💡 Solutions</button>` : ''}
+                    </div>
+                    <div class="content-body" id="content-${index}">
+                        ${lead.ai_content?.email || '<div style="text-align: center; padding: 20px; color: #9CA3AF;"><div class="spinner" style="margin: 0 auto 10px; width: 40px; height: 40px;"></div><p>Loading AI content...</p></div>'}
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn btn-success" onclick="sendWhatsApp(${index})">
+                            💬 Send WhatsApp
+                        </button>
+                        <button class="btn btn-info" onclick="sendEmail(${index})">
+                            📧 Send Email
+                        </button>
+                        <button class="btn btn-secondary" onclick="analyzeLead(${index})" style="background: linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%);">
+                            🔍 AI Analyze
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayLeads(leads = null, append = false) {
+            const container = document.getElementById('leads-container');
+            
+            // CRITICAL FIX: Use allLeads if leads parameter is null/undefined
+            const leadsToDisplay = (leads !== null && leads !== undefined) ? leads : allLeads;
+            
+            // CRITICAL FIX: Ensure leadsToDisplay is always an array
+            if (!Array.isArray(leadsToDisplay)) {
+                console.error('displayLeads error: leads is not an array', leadsToDisplay);
+                container.innerHTML = '<div class="empty-state"><h3>❌ Error</h3><p>Invalid data format. Please refresh the page.</p></div>';
+                return;
+            }
+
+            if (leadsToDisplay.length === 0 && !append) {
+                container.innerHTML = '<div class="empty-state"><h3>📭 No leads found</h3><p>Try generating some premium leads!</p></div>';
+                return;
+            }
+
+            const start = currentPage * leadsPerPage;
+            const end = start + leadsPerPage;
+            const leadsToShow = append ? leadsToDisplay : leadsToDisplay.slice(start, end);
+            
+            if (!append) {
+                displayedLeads = leadsToShow;
+            } else {
+                displayedLeads = displayedLeads.concat(leadsToShow);
+            }
+
+            const leadsHTML = leadsToShow.map((lead, index) => {
+                const actualIndex = append ? displayedLeads.length - leadsToShow.length + index : start + index;
+                return generateLeadCardHTML(lead, actualIndex);
+            }).join('');
+            
+            if (append) {
+                container.insertAdjacentHTML('beforeend', leadsHTML);
+            } else {
+                container.innerHTML = leadsHTML;
+            }
+            
+            updateLoadMoreButton(leadsToDisplay.length);
+        }
+
+        function updateLoadMoreButton(totalLeads) {
+            const container = document.getElementById('leads-container');
+            const existingButton = document.getElementById('load-more-btn');
+            if (existingButton) existingButton.remove();
+            
+            const shown = displayedLeads.length;
+            const remaining = totalLeads - shown;
+            
+            if (remaining > 0) {
+                const buttonHTML = `
+                    <div id="load-more-btn" style="text-align: center; margin: 30px 0;">
+                        <button class="btn btn-primary" onclick="loadMoreLeads()" style="padding: 16px 40px;">
+                            📥 Load More (${remaining} remaining)
+                        </button>
+                        <p style="color: #9CA3AF; margin-top: 10px;">
+                            Showing ${shown} of ${totalLeads} leads
+                        </p>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', buttonHTML);
+            } else if (totalLeads > 0) {
+                container.insertAdjacentHTML('beforeend', `
+                    <div id="load-more-btn" style="text-align: center; margin: 30px 0;">
+                        <p style="color: #9CA3AF; font-weight: 600;">
+                            ✅ All ${totalLeads} leads displayed
+                        </p>
+                    </div>
+                `);
+            }
+        }
+
+        function loadMoreLeads() {
+            currentPage++;
+            const start = currentPage * leadsPerPage;
+            const end = start + leadsPerPage;
+            const moreLeads = allLeads.slice(start, end);
+            if (moreLeads.length > 0) {
+                displayLeads(moreLeads, true);
+            }
+        }
+
+        function getQualityClass(score) {
+            if (score >= 90) return 'quality-excellent';
+            if (score >= 70) return 'quality-good';
+            return 'quality-medium';
+        }
+
+        function getStatusClass(status) {
+            if (!status) return 'new';
+            if (status.includes('Sent')) return 'sent';
+            if (status.includes('Ready') || status.includes('Contacted')) return 'contacted';
+            return 'new';
+        }
+
+        async function generateAIContentForLead(index) {
+            const lead = allLeads[index];
+            if (lead.ai_content) return true; // Already generated
+            
+            try {
+                console.log(`🤖 Generating AI content for lead ${index}: ${lead.title}`);
+                const response = await fetch(`/api/lead/${index}`);
+                const data = await response.json();
+                
+                console.log('✅ API Response received:', data.success);
+                
+                if (data.success && data.lead.ai_content) {
+                    lead.ai_content = data.lead.ai_content;
+                    allLeads[index] = lead;
+                    
+                    // Update the content display immediately
+                    const contentDiv = document.getElementById(`content-${index}`);
+                    if (contentDiv) {
+                        contentDiv.textContent = lead.ai_content.email || 'Content generated';
+                    }
+                    
+                    console.log('✅ AI content generated and displayed');
+                    showNotification(`✅ AI content ready for ${lead.title}`, 'success');
+                    return true;
+                } else {
+                    console.error('❌ Failed to generate AI content:', data.error);
+                    
+                    // Show error in content area
+                    const contentDiv = document.getElementById(`content-${index}`);
+                    if (contentDiv) {
+                        contentDiv.innerHTML = '<div style="text-align: center; padding: 20px; color: #EF4444;">❌ Failed to generate content. Click tab again to retry.</div>';
+                    }
+                    return false;
+                }
+            } catch (error) {
+                console.error('❌ Error generating AI content:', error);
+                
+                // Show error in content area
+                const contentDiv = document.getElementById(`content-${index}`);
+                if (contentDiv) {
+                    contentDiv.innerHTML = '<div style="text-align: center; padding: 20px; color: #EF4444;">❌ Network error. Please try again.</div>';
+                }
+                return false;
+            }
+        }
+
+        async function showTab(index, type) {
+            const lead = allLeads[index];
+            const contentDiv = document.getElementById(`content-${index}`);
+            const analysis = lead.deep_analysis || {};
+
+            // Generate AI content if not exists
+            if (!lead.ai_content && (type === 'email' || type === 'whatsapp' || type === 'call')) {
+                contentDiv.innerHTML = '<div style="text-align: center; padding: 20px;"><div class="spinner" style="margin: 0 auto 10px;"></div><p style="color: #9CA3AF;">Generating AI content...</p></div>';
+                
+                const success = await generateAIContentForLead(index);
+                
+                if (!success) {
+                    contentDiv.innerHTML = '<div style="text-align: center; padding: 20px; color: #EF4444;">❌ Failed to generate content. Please try again.</div>';
+                    return;
+                }
+            }
+
+            // Update display with generated content
+            if (type === 'email') {
+                contentDiv.textContent = lead.ai_content?.email || 'No content available';
+            } else if (type === 'whatsapp') {
+                contentDiv.textContent = lead.ai_content?.whatsapp || 'No content available';
+            } else if (type === 'call') {
+                contentDiv.textContent = lead.ai_content?.call_script || 'No content available';
+            } else if (type === 'solutions') {
+                const solutions = analysis.ragspro_solutions || {};
+                let html = '<div style="padding: 10px;">';
+                
+                if (solutions.immediate && solutions.immediate.length > 0) {
+                    html += '<h4 style="color: #34D399; margin-bottom: 10px;">🚀 Immediate Solutions</h4>';
+                    solutions.immediate.forEach(sol => {
+                        html += `
+                            <div style="background: rgba(16, 185, 129, 0.1); padding: 12px; border-radius: 10px; margin: 8px 0; border-left: 3px solid #10B981;">
+                                <strong style="color: #34D399;">${sol.title}</strong>
+                                <p style="margin: 5px 0;">${sol.description}</p>
+                                <div style="font-size: 0.9em; margin-top: 5px;">
+                                    ⏱️ ${sol.timeline} | 💰 ${sol.price} | 📈 ${sol.roi}
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+                
+                html += '</div>';
+                contentDiv.innerHTML = html;
+            }
+
+            const card = contentDiv.closest('.lead-card');
+            card.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        async function sendWhatsApp(index) {
+            const lead = allLeads[index];
+            const phone = lead.phone || '';
+            const message = lead.ai_content?.whatsapp || '';
+            const businessName = lead.title;
+
+            if (!phone) {
+                showNotification('❌ No phone number available', 'error');
+                return;
+            }
+
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = '⏳ Sending...';
+
+            try {
+                const response = await fetch('/api/send-whatsapp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        lead_id: index,
+                        phone: phone,
+                        message: message,
+                        business_name: businessName
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    window.open(data.url, '_blank');
+                    showNotification(`✅ WhatsApp sent to ${businessName}`, 'success');
+                    lead.status = 'WhatsApp Sent';
+                    btn.textContent = '✅ Sent';
+                    setTimeout(() => loadLeads(), 2000);
+                } else {
+                    throw new Error(data.error || 'Failed to send WhatsApp');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification(`❌ Error: ${error.message}`, 'error');
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        }
+
+        async function sendEmail(index) {
+            const lead = allLeads[index];
+            const email = lead.email || '';
+            const subject = 'Partnership Opportunity - RagsPro.com';
+            const body = lead.ai_content?.email || '';
+            const businessName = lead.title;
+
+            if (!body) {
+                showNotification('❌ No email content available', 'error');
+                return;
+            }
+
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = '⏳ Sending...';
+
+            try {
+                const response = await fetch('/api/send-email', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        lead_id: index,
+                        email: email,
+                        subject: subject,
+                        body: body,
+                        business_name: businessName
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    if (data.url) window.open(data.url, '_blank');
+                    showNotification(`✅ Email sent to ${businessName}`, 'success');
+                    lead.status = data.status === 'sent' ? 'Email Sent' : 'Email Ready';
+                    btn.textContent = data.status === 'sent' ? '✅ Sent' : '✅ Ready';
+                    setTimeout(() => loadLeads(), 2000);
+                } else {
+                    throw new Error(data.error || 'Failed to send email');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification(`❌ Error: ${error.message}`, 'error');
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        }
+
+        function resetAIPrompt() {
+            const defaultPrompt = `You are writing on behalf of Ragspro.com - a premium software development agency.
+
+Generate a professional, SHORT cold email (under 100 words) for this prospect:
+
+Business: {business_name}
+Type: {business_type}
+Location: {city}
+Rating: {rating}★ ({reviews} reviews)
+
+RAGSPRO VALUE PROPOSITION:
+- Fast MVP delivery (2-4 weeks)
+- Modern tech stack (React, Node.js, Python, AWS)
+- Transparent pricing ($5k-$50k projects)
+- 100% satisfaction guarantee
+
+Keep it conversational, highlight their pain points, and include a clear call-to-action.`;
+            
+            document.getElementById('ai-prompt').value = defaultPrompt;
+            showNotification('✅ AI prompt reset to default', 'success');
+        }
+
+        // City options by country
+        const cityOptions = {
+            'USA': ['New York', 'San Francisco', 'Los Angeles', 'Chicago', 'Boston', 'Seattle', 'Austin', 'Miami', 'Denver', 'Atlanta'],
+            'UK': ['London', 'Manchester', 'Birmingham', 'Edinburgh', 'Glasgow', 'Bristol', 'Leeds', 'Liverpool'],
+            'UAE': ['Dubai', 'Abu Dhabi', 'Sharjah', 'Ajman'],
+            'Canada': ['Toronto', 'Vancouver', 'Montreal', 'Calgary', 'Ottawa', 'Edmonton'],
+            'Australia': ['Sydney', 'Melbourne', 'Brisbane', 'Perth', 'Adelaide'],
+            'Singapore': ['Singapore'],
+            'India': ['Delhi', 'Mumbai', 'Bangalore', 'Hyderabad', 'Chennai', 'Kolkata', 'Pune', 'Ahmedabad', 'Jaipur', 'Surat', 'Lucknow', 'Kanpur', 'Nagpur', 'Indore', 'Bhopal', 'Chandigarh', 'Coimbatore', 'Kochi'],
+            'France': ['Paris', 'Lyon', 'Marseille', 'Toulouse', 'Nice', 'Nantes'],
+            'Germany': ['Berlin', 'Munich', 'Frankfurt', 'Hamburg', 'Cologne', 'Stuttgart'],
+            'Saudi Arabia': ['Riyadh', 'Jeddah', 'Dammam', 'Mecca', 'Medina'],
+            'Japan': ['Tokyo', 'Osaka', 'Kyoto', 'Yokohama', 'Nagoya'],
+            'Spain': ['Madrid', 'Barcelona', 'Valencia', 'Seville'],
+            'Italy': ['Rome', 'Milan', 'Naples', 'Turin', 'Florence']
+        };
+
+        function updateCityOptions() {
+            const country = document.getElementById('target-markets').value;
+            const citySelect = document.getElementById('target-cities');
+            
+            // Clear existing options
+            citySelect.innerHTML = '<option value="">🌎 All Cities</option>';
+            
+            if (country && cityOptions[country]) {
+                cityOptions[country].forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city;
+                    option.textContent = city;
+                    citySelect.appendChild(option);
+                });
+            }
+        }
+
+        async function startGeneration() {
+            const country = document.getElementById('target-markets').value;
+            const markets = country ? [country] : [];
+            const cities = Array.from(document.getElementById('target-cities').selectedOptions)
+                .map(opt => opt.value)
+                .filter(v => v !== '');
+            const businessTypes = Array.from(document.getElementById('business-types').selectedOptions).map(opt => opt.value);
+            const numLeads = parseInt(document.getElementById('num-leads').value);
+            const qualityThreshold = parseInt(document.getElementById('quality-threshold').value);
+            const aiPrompt = document.getElementById('ai-prompt').value;
+
+            // Validation
+            if (!aiPrompt.trim()) {
+                showNotification('❌ AI prompt cannot be empty!', 'error');
+                return;
+            }
+
+            document.getElementById('generate-btn').style.display = 'none';
+            document.getElementById('stop-btn').style.display = 'inline-block';
+            document.getElementById('progress-bar').classList.add('active');
+            isGenerating = true;
+
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        markets: markets,
+                        cities: cities,
+                        business_types: businessTypes,
+                        num_leads: numLeads,
+                        quality_threshold: qualityThreshold,
+                        ai_prompt: aiPrompt,
+                        clear_old: true  // Always clear old leads for fresh generation
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showNotification('✅ Generation started! Old leads cleared.', 'success');
+                    // Clear current display
+                    allLeads = [];
+                    displayedLeads = [];
+                    const container = document.getElementById('leads-container');
+                    container.innerHTML = '<div class="loading"><div class="spinner"></div><p>Generating fresh leads...</p></div>';
+                    
+                    statusCheckInterval = setInterval(checkGenerationStatus, 2000);
+                } else {
+                    throw new Error(data.error || 'Failed to start generation');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification(`❌ Error: ${error.message}`, 'error');
+                stopGeneration();
+            }
+        }
+
+        async function checkGenerationStatus() {
+            try {
+                const response = await fetch('/api/generation-status');
+                const data = await response.json();
+
+                if (data.is_running) {
+                    const progress = data.progress || 0;
+                    document.getElementById('progress-fill').style.width = progress + '%';
+                    document.getElementById('progress-fill').textContent = progress + '%';
+                    
+                    if (data.current_lead) {
+                        showNotification(`🔍 Processing: ${data.current_lead}`, 'info');
+                    }
+                } else {
+                    clearInterval(statusCheckInterval);
+                    stopGeneration();
+                    
+                    // Reload everything with fresh data
+                    loadStats();
+                    loadHotLeads();
+                    loadTodaysLeads();
+                    loadLeads();  // Reload leads to show new ones
+                    
+                    showNotification('✅ Generation complete! Fresh leads loaded.', 'success');
+                }
+            } catch (error) {
+                console.error('Error checking status:', error);
+            }
+        }
+
+        function stopGeneration() {
+            isGenerating = false;
+            clearInterval(statusCheckInterval);
+            document.getElementById('generate-btn').style.display = 'inline-block';
+            document.getElementById('stop-btn').style.display = 'none';
+            document.getElementById('progress-bar').classList.remove('active');
+        }
+
+        // viewHistory and showAllHistory are defined below in the async section
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideInRight 0.4s ease-out reverse';
+                setTimeout(() => notification.remove(), 400);
+            }, 3000);
+        }
+    
+// ============================================================================
+// EXPORT FUNCTIONS
+// ============================================================================
+
+async function exportCSV() {
+    try {
+        showNotification('Exporting to CSV...', 'info');
+        window.location.href = '/api/export/csv';
+        showNotification('✅ CSV exported successfully!', 'success');
+    } catch (error) {
+        showNotification('❌ Export failed: ' + error.message, 'error');
+    }
+}
+
+async function exportExcel() {
+    try {
+        showNotification('Exporting to Excel...', 'info');
+        window.location.href = '/api/export/excel';
+        showNotification('✅ Excel exported successfully!', 'success');
+    } catch (error) {
+        showNotification('❌ Export failed: ' + error.message, 'error');
+    }
+}
+
+async function exportPDF() {
+    try {
+        showNotification('Exporting to PDF...', 'info');
+        window.location.href = '/api/export/pdf';
+        showNotification('✅ PDF exported successfully!', 'success');
+    } catch (error) {
+        showNotification('❌ Export failed: ' + error.message, 'error');
+    }
+}
+
+// ============================================================================
+// HISTORY FUNCTIONS
+// ============================================================================
+
+async function viewHistory() {
+    try {
+        const response = await fetch('/api/history');
+        const data = await response.json();
+        
+        if (data.history && data.history.length > 0) {
+            let html = '<div class="glass-card" style="padding: 30px; margin: 20px 0;">';
+            html += '<h3 style="margin-bottom: 20px;">📅 Generation History</h3>';
+            html += '<div style="display: grid; gap: 12px;">';
+            
+            data.history.forEach(item => {
+                html += `
+                    <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; cursor: pointer;"
+                         onclick="loadHistoryDate('${item.date}')">
+                        <strong>${item.date}</strong> - ${item.total_leads} leads
+                        <small style="color: #9CA3AF; display: block;">${item.timestamp}</small>
+                    </div>
+                `;
+            });
+            
+            html += '</div></div>';
+            
+            // Insert before leads section
+            const leadsSection = document.querySelector('.leads-section');
+            leadsSection.insertAdjacentHTML('beforebegin', html);
+        } else {
+            showNotification('No history found', 'info');
+        }
+    } catch (error) {
+        showNotification('❌ Failed to load history', 'error');
+    }
+}
+
+async function loadHistoryDate(date) {
+    try {
+        const response = await fetch(`/api/history/${date}`);
+        const data = await response.json();
+        
+        if (data.success) {
+            allLeads = data.leads;
+            displayedLeads = 0;
+            displayLeads();
+            showNotification(`✅ Loaded ${data.total_leads} leads from ${date}`, 'success');
+        }
+    } catch (error) {
+        showNotification('❌ Failed to load history date', 'error');
+    }
+}
+
+async function showAllHistory() {
+    try {
+        showNotification('📜 Loading all history...', 'info');
+        const response = await fetch('/api/history/all');
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (!data.leads || !Array.isArray(data.leads)) {
+            throw new Error('Invalid data format');
+        }
+        
+        allLeads = data.leads;
+        displayedLeads = 0;
+        displayLeads();
+        showNotification(`✅ Loaded all ${data.total_leads} leads from history`, 'success');
+    } catch (error) {
+        console.error('History load error:', error);
+        showNotification(`❌ Failed to load all history: ${error.message}`, 'error');
+    }
+}
+
+// ============================================================================
+// HOT LEADS & TODAY'S LEADS
+// ============================================================================
+
+async function showHotLeads() {
+    try {
+        showNotification('🔥 Loading hot leads...', 'info');
+        const response = await fetch('/api/leads/hot');
+        const data = await response.json();
+        
+        if (data.success) {
+            allLeads = data.hot_leads;
+            displayedLeads = 0;
+            displayLeads();
+            showNotification(`🔥 Found ${data.total} hot leads!`, 'success');
+        }
+    } catch (error) {
+        showNotification('❌ Failed to load hot leads', 'error');
+    }
+}
+
+async function showTodaysLeads() {
+    try {
+        showNotification('📅 Loading today\'s leads...', 'info');
+        const response = await fetch('/api/leads/today');
+        const data = await response.json();
+        
+        if (data.success) {
+            allLeads = data.leads;
+            displayedLeads = 0;
+            displayLeads();
+            showNotification(`📅 Found ${data.total} leads from today!`, 'success');
+        }
+    } catch (error) {
+        showNotification('❌ Failed to load today\'s leads', 'error');
+    }
+}
+
+// ============================================================================
+// FILTER FUNCTIONS
+// ============================================================================
+
+function clearFilters() {
+    document.getElementById('search-box').value = '';
+    document.getElementById('filter-category').value = '';
+    document.getElementById('filter-city').value = '';
+    document.getElementById('filter-rating').value = '';
+    applyFilters();
+    showNotification('✅ Filters cleared', 'success');
+}
+
+function showAllLeads() {
+    loadLeads();
+    showNotification('📋 Loading all leads...', 'info');
+}
+
+// ============================================================================
+// ANALYTICS DASHBOARD
+// ============================================================================
+
+async function showAnalytics() {
+    try {
+        const response = await fetch('/api/analytics/dashboard');
+        const data = await response.json();
+        
+        if (data.success) {
+            let html = '<div class="glass-card" style="padding: 30px; margin: 20px 0;">';
+            html += '<h3 style="margin-bottom: 20px;">📊 Analytics Dashboard</h3>';
+            html += '<div class="stats-grid">';
+            
+            const stats = data.stats;
+            html += `
+                <div class="stat-cube glass-card">
+                    <div class="stat-icon">📧</div>
+                    <div class="stat-value">${stats.emails_sent || 0}</div>
+                    <div class="stat-label">Emails Sent</div>
+                </div>
+                <div class="stat-cube glass-card">
+                    <div class="stat-icon">💬</div>
+                    <div class="stat-value">${stats.whatsapp_sent || 0}</div>
+                    <div class="stat-label">WhatsApp Sent</div>
+                </div>
+                <div class="stat-cube glass-card">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-value">${stats.email_reply_rate || 0}%</div>
+                    <div class="stat-label">Reply Rate</div>
+                </div>
+                <div class="stat-cube glass-card">
+                    <div class="stat-icon">🔥</div>
+                    <div class="stat-value">${stats.hot_leads || 0}</div>
+                    <div class="stat-label">Hot Leads</div>
+                </div>
+            `;
+            html += '</div></div>';
+            
+            // Insert before leads section
+            const leadsSection = document.querySelector('.leads-section');
+            leadsSection.insertAdjacentHTML('beforebegin', html);
+            
+            showNotification('✅ Analytics loaded', 'success');
+        }
+    } catch (error) {
+        showNotification('❌ Failed to load analytics', 'error');
+    }
+}
+
+// ============================================================================
+// BULK CAMPAIGN
+// ============================================================================
+
+async function startBulkCampaign() {
+    const subject = prompt('Enter email subject:');
+    const body = prompt('Enter email body:');
+    
+    if (!subject || !body) {
+        showNotification('❌ Campaign cancelled', 'error');
+        return;
+    }
+    
+    try {
+        const response = await fetch('/api/bulk/start', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                lead_ids: allLeads.map((_, i) => i),
+                subject: subject,
+                body: body
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showNotification('✅ Bulk campaign started!', 'success');
+            // Poll for status
+            const interval = setInterval(async () => {
+                const statusResp = await fetch('/api/bulk/status');
+                const statusData = await statusResp.json();
+                
+                if (!statusData.status.active) {
+                    clearInterval(interval);
+                    showNotification(`✅ Campaign complete! Sent: ${statusData.status.sent}`, 'success');
+                }
+            }, 5000);
+        }
+    } catch (error) {
+        showNotification('❌ Failed to start campaign', 'error');
+    }
+}
+
+// ============================================================================
+// LINKEDIN SEARCH
+// ============================================================================
+
+async function searchLinkedIn() {
+    const keywords = prompt('Enter LinkedIn search keywords (e.g., "CEO tech startup"):');
+    const location = prompt('Enter location (optional):');
+    
+    if (!keywords) return;
+    
+    try {
+        showNotification('🔍 Searching LinkedIn...', 'info');
+        const response = await fetch('/api/linkedin/search', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                keywords: keywords,
+                location: location || '',
+                limit: 20
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            console.log('LinkedIn profiles:', data.profiles);
+            showNotification(`✅ Found ${data.total} LinkedIn profiles!`, 'success');
+            
+            // Display profiles
+            let html = '<div class="glass-card" style="padding: 30px; margin: 20px 0;">';
+            html += '<h3>🔗 LinkedIn Profiles</h3>';
+            data.profiles.forEach(profile => {
+                html += `
+                    <div style="background: rgba(255,255,255,0.05); padding: 16px; margin: 12px 0; border-radius: 12px;">
+                        <strong>${profile.name}</strong><br>
+                        <small>${profile.title || 'N/A'}</small><br>
+                        <a href="${profile.profile_url}" target="_blank" style="color: #7C3AED;">View Profile</a>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            
+            document.querySelector('.leads-section').insertAdjacentHTML('beforebegin', html);
+        }
+    } catch (error) {
+        showNotification('❌ LinkedIn search failed', 'error');
+    }
+}
+
+// ============================================================================
+// WEBSITE SCANNER
+// ============================================================================
+
+async function scanWebsite() {
+    const url = prompt('Enter website URL to scan:');
+    if (!url) return;
+    
+    try {
+        showNotification('🔍 Scanning website...', 'info');
+        const response = await fetch('/api/website/scan', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url: url })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            console.log('Website analysis:', data.analysis);
+            showNotification('✅ Website scanned successfully!', 'success');
+            
+            // Display analysis
+            alert(`Website Analysis:\n\nSEO Score: ${data.analysis.seo_score}/100\nMobile Friendly: ${data.analysis.mobile_friendly ? 'Yes' : 'No'}\nLoad Time: ${data.analysis.load_time}s`);
+        }
+    } catch (error) {
+        showNotification('❌ Website scan failed', 'error');
+    }
+}
+
+console.log('✅ All dashboard functions loaded!');
+
+
+// ============================================================================
+// AI LEAD ANALYSIS
+// ============================================================================
+
+async function analyzeLead(index) {
+    try {
+        const lead = allLeads[index];
+        
+        showNotification('🔍 Analyzing lead with AI...', 'info');
+        
+        const response = await fetch('/api/lead/analyze', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ lead: lead })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            const analysis = data.analysis;
+            const pitch = data.quick_pitch;
+            
+            // Create analysis modal
+            let html = `
+                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px;" onclick="this.remove()">
+                    <div class="glass-card" style="max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 40px;" onclick="event.stopPropagation()">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                            <h2 style="margin: 0; background: linear-gradient(135deg, #7C3AED 0%, #0EA5E9 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                                🔍 AI Analysis: ${lead.title}
+                            </h2>
+                            <button onclick="this.closest('[style*=\'position: fixed\']').remove()" style="background: none; border: none; font-size: 2em; cursor: pointer; color: #9CA3AF;">×</button>
+                        </div>
+                        
+                        <div class="info-box" style="background: rgba(124, 58, 237, 0.1); border-color: #7C3AED; margin-bottom: 20px;">
+                            <strong>🎯 Quick Pitch</strong>
+                            <p style="margin-top: 10px; font-size: 1.1em;">${pitch}</p>
+                        </div>
+                        
+                        ${analysis.problems && analysis.problems.length > 0 ? `
+                        <div class="info-box" style="background: rgba(239, 68, 68, 0.1); border-color: #EF4444; margin-bottom: 20px;">
+                            <strong>⚠️ Problems Identified</strong>
+                            <ul style="margin-top: 10px; padding-left: 20px;">
+                                ${analysis.problems.map(p => `<li style="margin: 8px 0;">${p}</li>`).join('')}
+                            </ul>
+                        </div>
+                        ` : ''}
+                        
+                        ${analysis.solutions && analysis.solutions.length > 0 ? `
+                        <div class="info-box" style="background: rgba(16, 185, 129, 0.1); border-color: #10B981; margin-bottom: 20px;">
+                            <strong>💡 RagsPro Solutions</strong>
+                            <ul style="margin-top: 10px; padding-left: 20px;">
+                                ${analysis.solutions.map(s => `<li style="margin: 8px 0;">${s}</li>`).join('')}
+                            </ul>
+                        </div>
+                        ` : ''}
+                        
+                        ${analysis.revenue_opportunity ? `
+                        <div class="info-box" style="background: rgba(245, 158, 11, 0.1); border-color: #F59E0B; margin-bottom: 20px;">
+                            <strong>💰 Revenue Opportunity</strong>
+                            <p style="margin-top: 10px; font-size: 1.1em; font-weight: 600;">${analysis.revenue_opportunity}</p>
+                        </div>
+                        ` : ''}
+                        
+                        ${analysis.pain_points && analysis.pain_points.length > 0 ? `
+                        <div class="info-box" style="background: rgba(14, 165, 233, 0.1); border-color: #0EA5E9; margin-bottom: 20px;">
+                            <strong>📊 Pain Points</strong>
+                            <ul style="margin-top: 10px; padding-left: 20px;">
+                                ${analysis.pain_points.map(pp => `<li style="margin: 8px 0;">${pp}</li>`).join('')}
+                            </ul>
+                        </div>
+                        ` : ''}
+                        
+                        <div style="display: flex; gap: 12px; margin-top: 30px;">
+                            <button class="btn btn-success" onclick="sendWhatsApp(${index}); this.closest('[style*=\'position: fixed\']').remove();" style="flex: 1;">
+                                💬 Send WhatsApp
+                            </button>
+                            <button class="btn btn-info" onclick="sendEmail(${index}); this.closest('[style*=\'position: fixed\']').remove();" style="flex: 1;">
+                                📧 Send Email
+                            </button>
+                            <button class="btn btn-secondary" onclick="this.closest('[style*=\'position: fixed\']').remove()" style="flex: 1;">
+                                ✖️ Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', html);
+            showNotification('✅ Analysis complete!', 'success');
+        } else {
+            showNotification('❌ Analysis failed: ' + (data.error || 'Unknown error'), 'error');
+        }
+    } catch (error) {
+        console.error('Analyze error:', error);
+        showNotification('❌ Failed to analyze lead', 'error');
+    }
+}
+
+
+
+
+// ============================================================================
+// BULK SELECTION & ACTIONS
+// ============================================================================
+
+let selectedLeads = new Set();
+
+function toggleLeadSelection(index, isChecked) {
+    if (isChecked) {
+        selectedLeads.add(index);
+        document.getElementById(`lead-${index}`).classList.add('selected');
+    } else {
+        selectedLeads.delete(index);
+        document.getElementById(`lead-${index}`).classList.remove('selected');
+    }
+    updateSelectionUI();
+}
+
+function toggleSelectAll(isChecked) {
+    selectedLeads.clear();
+    
+    if (isChecked) {
+        // Select all visible leads
+        allLeads.forEach((lead, index) => {
+            selectedLeads.add(index);
+            const card = document.getElementById(`lead-${index}`);
+            if (card) {
+                card.classList.add('selected');
+                const checkbox = card.querySelector('.lead-checkbox');
+                if (checkbox) checkbox.checked = true;
+            }
+        });
+    } else {
+        // Deselect all
+        allLeads.forEach((lead, index) => {
+            const card = document.getElementById(`lead-${index}`);
+            if (card) {
+                card.classList.remove('selected');
+                const checkbox = card.querySelector('.lead-checkbox');
+                if (checkbox) checkbox.checked = false;
+            }
+        });
+    }
+    
+    updateSelectionUI();
+}
+
+function deselectAll() {
+    selectedLeads.clear();
+    document.getElementById('select-all-checkbox').checked = false;
+    
+    allLeads.forEach((lead, index) => {
+        const card = document.getElementById(`lead-${index}`);
+        if (card) {
+            card.classList.remove('selected');
+            const checkbox = card.querySelector('.lead-checkbox');
+            if (checkbox) checkbox.checked = false;
+        }
+    });
+    
+    updateSelectionUI();
+}
+
+function updateSelectionUI() {
+    const count = selectedLeads.size;
+    document.getElementById('selected-count').textContent = count;
+    document.getElementById('selection-counter').textContent = count > 0 ? `${count} lead(s) selected` : '';
+    
+    const bulkBar = document.getElementById('bulk-actions-bar');
+    if (count > 0) {
+        bulkBar.classList.add('show');
+    } else {
+        bulkBar.classList.remove('show');
+    }
+}
+
+function getSelectedLeads() {
+    return Array.from(selectedLeads).map(index => allLeads[index]);
+}
+
+// ============================================================================
+// BULK EXPORT FUNCTIONS
+// ============================================================================
+
+async function bulkExportExcel() {
+    const leadIds = Array.from(selectedLeads);
+    if (leadIds.length === 0) {
+        showNotification('⚠️ Please select leads first', 'warning');
+        return;
+    }
+    
+    showNotification(`📊 Exporting ${leadIds.length} leads to Excel...`, 'info');
+    
+    try {
+        const response = await fetch('/api/export/excel', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ lead_ids: leadIds })
+        });
+        
+        if (response.ok) {
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ragspro_leads_${leadIds.length}_${Date.now()}.xlsx`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            showNotification(`✅ Exported ${leadIds.length} leads to Excel`, 'success');
+        } else {
+            const error = await response.json();
+            throw new Error(error.error || 'Export failed');
+        }
+    } catch (error) {
+        console.error('Excel export error:', error);
+        showNotification(`❌ Excel export failed: ${error.message}`, 'error');
+    }
+}
+
+async function bulkExportPDF() {
+    const leadIds = Array.from(selectedLeads);
+    if (leadIds.length === 0) {
+        showNotification('⚠️ Please select leads first', 'warning');
+        return;
+    }
+    
+    showNotification(`📄 Exporting ${leadIds.length} leads to PDF...`, 'info');
+    
+    try {
+        const response = await fetch('/api/export/pdf', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ lead_ids: leadIds })
+        });
+        
+        if (response.ok) {
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ragspro_leads_${leadIds.length}_${Date.now()}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            showNotification(`✅ Exported ${leadIds.length} leads to PDF`, 'success');
+        } else {
+            const error = await response.json();
+            throw new Error(error.error || 'Export failed');
+        }
+    } catch (error) {
+        console.error('PDF export error:', error);
+        showNotification(`❌ PDF export failed: ${error.message}`, 'error');
+    }
+}
+
+async function bulkExportCSV() {
+    const leads = getSelectedLeads();
+    if (leads.length === 0) {
+        showNotification('⚠️ Please select leads first', 'warning');
+        return;
+    }
+    
+    showNotification(`📥 Exporting ${leads.length} leads to CSV...`, 'info');
+    
+    try {
+        const response = await fetch('/api/export/csv', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ leads: leads })
+        });
+        
+        if (response.ok) {
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `leads_${Date.now()}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            showNotification(`✅ Exported ${leads.length} leads to CSV`, 'success');
+        } else {
+            throw new Error('Export failed');
+        }
+    } catch (error) {
+        showNotification('❌ CSV export failed', 'error');
+    }
+}
+
+// ============================================================================
+// BULK COMMUNICATION FUNCTIONS
+// ============================================================================
+
+async function bulkSendEmail() {
+    const leads = getSelectedLeads();
+    if (leads.length === 0) {
+        showNotification('⚠️ Please select leads first', 'warning');
+        return;
+    }
+    
+    showNotification(`📧 Sending emails to ${leads.length} leads...`, 'info');
+    
+    let sent = 0;
+    for (const lead of leads) {
+        try {
+            const response = await fetch('/api/send-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ lead: lead })
+            });
+            
+            if (response.ok) sent++;
+        } catch (error) {
+            console.error('Email send error:', error);
+        }
+    }
+    
+    showNotification(`✅ Sent ${sent}/${leads.length} emails`, 'success');
+}
+
+async function bulkSendWhatsApp() {
+    const leads = getSelectedLeads();
+    if (leads.length === 0) {
+        showNotification('⚠️ Please select leads first', 'warning');
+        return;
+    }
+    
+    showNotification(`💬 Sending WhatsApp to ${leads.length} leads...`, 'info');
+    
+    let sent = 0;
+    for (const lead of leads) {
+        try {
+            const response = await fetch('/api/send-whatsapp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ lead: lead })
+            });
+            
+            if (response.ok) sent++;
+        } catch (error) {
+            console.error('WhatsApp send error:', error);
+        }
+    }
+    
+    showNotification(`✅ Sent ${sent}/${leads.length} WhatsApp messages`, 'success');
+}
+
+async function bulkLinkedInSearch() {
+    const leads = getSelectedLeads();
+    if (leads.length === 0) {
+        showNotification('⚠️ Please select leads first', 'warning');
+        return;
+    }
+    
+    showNotification(`🔗 Searching ${leads.length} leads on LinkedIn...`, 'info');
+    
+    // Open LinkedIn searches in new tabs
+    leads.forEach((lead, index) => {
+        setTimeout(() => {
+            const query = encodeURIComponent(lead.title || lead.name);
+            window.open(`https://www.linkedin.com/search/results/companies/?keywords=${query}`, '_blank');
+        }, index * 500); // Stagger by 500ms to avoid blocking
+    });
+    
+    showNotification(`✅ Opened ${leads.length} LinkedIn searches`, 'success');
+}
+
+    
+
+// ============================================================================
+// SETTINGS PANEL FUNCTIONS
+// ============================================================================
+
+function openSettings() {
+    document.getElementById('settings-modal').classList.add('show');
+    loadSettings();
+}
+
+function closeSettings() {
+    document.getElementById('settings-modal').classList.remove('show');
+}
+
+function switchSettingsTab(tabName) {
+    // Remove active from all tabs
+    document.querySelectorAll('.settings-tab').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.settings-content').forEach(content => content.classList.remove('active'));
+    
+    // Add active to selected tab
+    event.target.classList.add('active');
+    document.getElementById(tabName + '-content').classList.add('active');
+}
+
+async function loadSettings() {
+    try {
+        const response = await fetch('/api/settings');
+        const data = await response.json();
+        
+        if (data.success) {
+            const settings = data.settings;
+            
+            // AI Prompt
+            document.getElementById('ai-prompt-input').value = settings.ai_prompt || '';
+            
+            // API Keys (masked)
+            document.getElementById('gemini-key-input').value = settings.gemini_key ? '••••••••' : '';
+            document.getElementById('serpapi-key-input').value = settings.serpapi_key ? '••••••••' : '';
+            document.getElementById('gmail-password-input').value = settings.gmail_password ? '••••••••' : '';
+            
+            // Profile
+            document.getElementById('user-name-input').value = settings.user_name || '';
+            document.getElementById('company-name-input').value = settings.company_name || '';
+            document.getElementById('user-email-input').value = settings.user_email || '';
+            document.getElementById('user-phone-input').value = settings.user_phone || '';
+            document.getElementById('user-website-input').value = settings.user_website || '';
+            
+            // LinkedIn
+            document.getElementById('linkedin-url-input').value = settings.linkedin_url || '';
+            document.getElementById('linkedin-email-input').value = settings.linkedin_email || '';
+            document.getElementById('linkedin-password-input').value = settings.linkedin_password ? '••••••••' : '';
+            document.getElementById('linkedin-preferences-input').value = settings.linkedin_preferences || '';
+        }
+    } catch (error) {
+        console.error('Failed to load settings:', error);
+    }
+}
+
+async function saveAIPrompt() {
+    const prompt = document.getElementById('ai-prompt-input').value;
+    
+    try {
+        const response = await fetch('/api/settings/ai-prompt', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: prompt })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showNotification('✅ AI Prompt saved successfully!', 'success');
+        } else {
+            showNotification('❌ Failed to save AI Prompt', 'error');
+        }
+    } catch (error) {
+        showNotification('❌ Error saving AI Prompt', 'error');
+    }
+}
+
+async function saveAPIKeys() {
+    const geminiKey = document.getElementById('gemini-key-input').value;
+    const serpapiKey = document.getElementById('serpapi-key-input').value;
+    const gmailPassword = document.getElementById('gmail-password-input').value;
+    
+    // Don't send if masked
+    const data = {};
+    if (geminiKey && geminiKey !== '••••••••') data.gemini_key = geminiKey;
+    if (serpapiKey && serpapiKey !== '••••••••') data.serpapi_key = serpapiKey;
+    if (gmailPassword && gmailPassword !== '••••••••') data.gmail_password = gmailPassword;
+    
+    try {
+        const response = await fetch('/api/settings/api-keys', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            showNotification('✅ API Keys saved successfully!', 'success');
+        } else {
+            showNotification('❌ Failed to save API Keys', 'error');
+        }
+    } catch (error) {
+        showNotification('❌ Error saving API Keys', 'error');
+    }
+}
+
+async function saveProfile() {
+    const data = {
+        user_name: document.getElementById('user-name-input').value,
+        company_name: document.getElementById('company-name-input').value,
+        user_email: document.getElementById('user-email-input').value,
+        user_phone: document.getElementById('user-phone-input').value,
+        user_website: document.getElementById('user-website-input').value
+    };
+    
+    try {
+        const response = await fetch('/api/settings/profile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            showNotification('✅ Profile saved successfully!', 'success');
+        } else {
+            showNotification('❌ Failed to save Profile', 'error');
+        }
+    } catch (error) {
+        showNotification('❌ Error saving Profile', 'error');
+    }
+}
+
+async function saveLinkedIn() {
+    const linkedinPassword = document.getElementById('linkedin-password-input').value;
+    
+    const data = {
+        linkedin_url: document.getElementById('linkedin-url-input').value,
+        linkedin_email: document.getElementById('linkedin-email-input').value,
+        linkedin_preferences: document.getElementById('linkedin-preferences-input').value
+    };
+    
+    // Don't send if masked
+    if (linkedinPassword && linkedinPassword !== '••••••••') {
+        data.linkedin_password = linkedinPassword;
+    }
+    
+    try {
+        const response = await fetch('/api/settings/linkedin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            showNotification('✅ LinkedIn settings saved successfully!', 'success');
+        } else {
+            showNotification('❌ Failed to save LinkedIn settings', 'error');
+        }
+    } catch (error) {
+        showNotification('❌ Error saving LinkedIn settings', 'error');
+    }
+}
+
+function logout() {
+    if (confirm('Are you sure you want to logout?')) {
+        showNotification('👋 Logging out...', 'info');
+        setTimeout(() => {
+            window.location.href = '/logout';
+        }, 1000);
+    }
+}
+
+// Close modal on outside click
+document.addEventListener('click', function(event) {
+    const modal = document.getElementById('settings-modal');
+    if (event.target === modal) {
+        closeSettings();
+    }
+});
+
+    </script>
+
+    <!-- Bulk Actions Bar -->
+    <div id="bulk-actions-bar" class="bulk-actions-bar">
+        <span class="selection-count"><span id="selected-count">0</span> selected</span>
+        <button class="bulk-action-btn" onclick="bulkExportExcel()" title="Export selected to Excel">
+            📊 Excel
+        </button>
+        <button class="bulk-action-btn" onclick="bulkExportPDF()" title="Export selected to PDF">
+            📄 PDF
+        </button>
+        <button class="bulk-action-btn" onclick="bulkExportCSV()" title="Export selected to CSV">
+            📥 CSV
+        </button>
+        <button class="bulk-action-btn" onclick="bulkSendEmail()" title="Send email to selected">
+            📧 Email
+        </button>
+        <button class="bulk-action-btn" onclick="bulkSendWhatsApp()" title="Send WhatsApp to selected">
+            💬 WhatsApp
+        </button>
+        <button class="bulk-action-btn" onclick="bulkLinkedInSearch()" title="Search on LinkedIn">
+            🔗 LinkedIn
+        </button>
+        <button class="bulk-action-btn" onclick="deselectAll()" title="Clear selection" style="background: rgba(239, 68, 68, 0.3);">
+            ✖️ Clear
+        </button>
+    </div>
+
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="settings-modal">
+        <div class="settings-container">
+            <div class="settings-header">
+                <h2 style="margin: 0; color: white;">⚙️ Settings & Configuration</h2>
+                <button onclick="closeSettings()" style="background: none; border: none; color: #9CA3AF; font-size: 2em; cursor: pointer; padding: 0; line-height: 1;">×</button>
+            </div>
+            
+            <!-- Tabs -->
+            <div class="settings-tabs">
+                <button class="settings-tab active" onclick="switchSettingsTab('ai-prompt')">🤖 AI Prompt</button>
+                <button class="settings-tab" onclick="switchSettingsTab('api-keys')">🔑 API Keys</button>
+                <button class="settings-tab" onclick="switchSettingsTab('profile')">👤 Profile</button>
+                <button class="settings-tab" onclick="switchSettingsTab('linkedin')">🔗 LinkedIn</button>
+            </div>
+            
+            <!-- AI Prompt Tab -->
+            <div id="ai-prompt-content" class="settings-content active">
+                <div class="settings-group">
+                    <label class="settings-label">AI Content Generation Prompt Template</label>
+                    <textarea id="ai-prompt-input" class="settings-input settings-textarea" placeholder="Enter your custom AI prompt template..."></textarea>
+                    <div class="settings-hint">
+                        Use {business_name}, {business_type}, {rating} as placeholders. This prompt will be used to generate personalized content for each lead.
+                    </div>
+                </div>
+                <button class="settings-save-btn" onclick="saveAIPrompt()">💾 Save AI Prompt</button>
+            </div>
+            
+            <!-- API Keys Tab -->
+            <div id="api-keys-content" class="settings-content">
+                <div class="settings-group">
+                    <label class="settings-label">🔮 Gemini API Key</label>
+                    <input type="password" id="gemini-key-input" class="settings-input" placeholder="Enter Gemini API key...">
+                    <div class="settings-hint">
+                        Get your free API key from: <a href="https://makersuite.google.com/app/apikey" target="_blank" style="color: #7C3AED;">Google AI Studio</a>
+                    </div>
+                </div>
+                
+                <div class="settings-group">
+                    <label class="settings-label">🔍 SerpAPI Key</label>
+                    <input type="password" id="serpapi-key-input" class="settings-input" placeholder="Enter SerpAPI key...">
+                    <div class="settings-hint">
+                        Get your API key from: <a href="https://serpapi.com/" target="_blank" style="color: #7C3AED;">SerpAPI.com</a>
+                    </div>
+                </div>
+                
+                <div class="settings-group">
+                    <label class="settings-label">📧 Gmail App Password</label>
+                    <input type="password" id="gmail-password-input" class="settings-input" placeholder="Enter Gmail app password...">
+                    <div class="settings-hint">
+                        Generate app password from: <a href="https://myaccount.google.com/apppasswords" target="_blank" style="color: #7C3AED;">Google Account</a>
+                    </div>
+                </div>
+                
+                <button class="settings-save-btn" onclick="saveAPIKeys()">💾 Save API Keys</button>
+            </div>
+            
+            <!-- Profile Tab -->
+            <div id="profile-content" class="settings-content">
+                <div class="settings-group">
+                    <label class="settings-label">👤 Your Name</label>
+                    <input type="text" id="user-name-input" class="settings-input" placeholder="Enter your full name...">
+                </div>
+                
+                <div class="settings-group">
+                    <label class="settings-label">🏢 Company Name</label>
+                    <input type="text" id="company-name-input" class="settings-input" placeholder="Enter your company name...">
+                </div>
+                
+                <div class="settings-group">
+                    <label class="settings-label">📧 Email Address</label>
+                    <input type="email" id="user-email-input" class="settings-input" placeholder="Enter your email...">
+                </div>
+                
+                <div class="settings-group">
+                    <label class="settings-label">📱 Phone Number</label>
+                    <input type="tel" id="user-phone-input" class="settings-input" placeholder="Enter your phone number...">
+                </div>
+                
+                <div class="settings-group">
+                    <label class="settings-label">🌐 Website</label>
+                    <input type="url" id="user-website-input" class="settings-input" placeholder="Enter your website URL...">
+                </div>
+                
+                <button class="settings-save-btn" onclick="saveProfile()">💾 Save Profile</button>
+            </div>
+            
+            <!-- LinkedIn Tab -->
+            <div id="linkedin-content" class="settings-content">
+                <div class="settings-group">
+                    <label class="settings-label">🔗 LinkedIn Profile URL</label>
+                    <input type="url" id="linkedin-url-input" class="settings-input" placeholder="https://linkedin.com/in/yourprofile">
+                </div>
+                
+                <div class="settings-group">
+                    <label class="settings-label">📧 LinkedIn Email</label>
+                    <input type="email" id="linkedin-email-input" class="settings-input" placeholder="Enter LinkedIn login email...">
+                </div>
+                
+                <div class="settings-group">
+                    <label class="settings-label">🔐 LinkedIn Password</label>
+                    <input type="password" id="linkedin-password-input" class="settings-input" placeholder="Enter LinkedIn password...">
+                    <div class="settings-hint">
+                        ⚠️ Stored securely and encrypted. Used only for automated LinkedIn searches.
+                    </div>
+                </div>
+                
+                <div class="settings-group">
+                    <label class="settings-label">🎯 LinkedIn Search Preferences</label>
+                    <textarea id="linkedin-preferences-input" class="settings-input" style="min-height: 100px;" placeholder="Enter your LinkedIn search preferences..."></textarea>
+                    <div class="settings-hint">
+                        Example: Focus on decision makers, C-level executives, companies with 50+ employees
+                    </div>
+                </div>
+                
+                <button class="settings-save-btn" onclick="saveLinkedIn()">💾 Save LinkedIn Settings</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
