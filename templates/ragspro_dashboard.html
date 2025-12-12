@@ -1479,21 +1479,25 @@ Keep it conversational, highlight their pain points, and include a clear call-to
             const solutions = analysis.ragspro_solutions || {};
             const painPoints = analysis.pain_points || [];
             
-            // Auto-generate AI content if not present
-            if (!lead.ai_content) {
-                setTimeout(() => generateAIContentForLead(index), 100);
-            }
+            // AI content will only be generated when user clicks "AI Analyze" button
+            // No automatic generation to save API quota and improve performance
             
             return `
-                <div class="lead-card">
+                <div class="lead-card" id="lead-card-${index}">
                     <div class="lead-header">
-                        <div class="lead-title">
-                            <h3>
-                                ${lead.title}
-                                ${lead.ai_researched ? '<span class="status-badge status-sent">🤖 AI Analyzed</span>' : ''}
-                                ${lead.status ? `<span class="status-badge status-${getStatusClass(lead.status)}">${lead.status}</span>` : ''}
-                            </h3>
-                            <p>${lead.type} • ${lead.address}</p>
+                        <div style="display: flex; align-items: flex-start; gap: 15px; flex: 1;">
+                            <input type="checkbox" 
+                                   id="lead-checkbox-${index}" 
+                                   onchange="toggleLeadSelection(${index}, this.checked)"
+                                   style="width: 20px; height: 20px; cursor: pointer; margin-top: 5px;">
+                            <div class="lead-title" style="flex: 1;">
+                                <h3>
+                                    ${lead.title}
+                                    ${lead.ai_researched ? '<span class="status-badge status-sent">🤖 AI Analyzed</span>' : ''}
+                                    ${lead.status ? `<span class="status-badge status-${getStatusClass(lead.status)}">${lead.status}</span>` : ''}
+                                </h3>
+                                <p>${lead.type} • ${lead.address}</p>
+                            </div>
                         </div>
                         <div class="quality-badge ${getQualityClass(lead.quality_score)}">
                             ${lead.quality_score}/100
@@ -2852,6 +2856,94 @@ async function bulkLinkedInSearch() {
     showNotification(`✅ Opened ${leads.length} LinkedIn searches`, 'success');
 }
 
+async function bulkAIAnalyze() {
+    const leadIds = Array.from(selectedLeads);
+    if (leadIds.length === 0) {
+        showNotification('⚠️ Please select leads first', 'warning');
+        return;
+    }
+    
+    if (leadIds.length > 10) {
+        showNotification('⚠️ Maximum 10 leads can be analyzed at once', 'warning');
+        return;
+    }
+    
+    showNotification(`🤖 Analyzing ${leadIds.length} leads with AI...`, 'info');
+    
+    try {
+        const response = await fetch('/api/leads/bulk-analyze', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ lead_ids: leadIds })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Show results in a modal
+            let html = `
+                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px;" onclick="this.remove()">
+                    <div class="glass-card" style="max-width: 1000px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 40px;" onclick="event.stopPropagation()">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                            <h2 style="margin: 0; background: linear-gradient(135deg, #7C3AED 0%, #0EA5E9 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                                🤖 Bulk AI Analysis Results (${data.total} leads)
+                            </h2>
+                            <button onclick="this.closest('[style*=\\'position: fixed\\']').remove()" style="background: none; border: none; font-size: 2em; cursor: pointer; color: #9CA3AF;">×</button>
+                        </div>
+                        
+                        <div style="display: grid; gap: 20px;">
+            `;
+            
+            data.analyses.forEach((analysis, index) => {
+                html += `
+                    <div class="info-box" style="background: rgba(124, 58, 237, 0.05); border-color: #7C3AED;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                            <div>
+                                <strong style="font-size: 1.1em;">${index + 1}. ${analysis.business_name}</strong>
+                                <p style="color: #9CA3AF; margin: 5px 0;">${analysis.business_type} • ${analysis.rating}★</p>
+                            </div>
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <strong>🎯 Quick Pitch:</strong>
+                            <p style="margin: 5px 0 10px 0;">${analysis.quick_pitch}</p>
+                            <strong>⚠️ Pain Point:</strong>
+                            <p style="margin: 5px 0 10px 0;">${analysis.pain_point}</p>
+                            <strong>💡 Solution:</strong>
+                            <p style="margin: 5px 0;">${analysis.solution}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `
+                        </div>
+                        
+                        <div style="display: flex; gap: 12px; margin-top: 30px;">
+                            <button class="btn btn-success" onclick="bulkSendEmail(); this.closest('[style*=\\'position: fixed\\']').remove();" style="flex: 1;">
+                                📧 Send Emails
+                            </button>
+                            <button class="btn btn-info" onclick="bulkSendWhatsApp(); this.closest('[style*=\\'position: fixed\\']').remove();" style="flex: 1;">
+                                💬 Send WhatsApp
+                            </button>
+                            <button class="btn btn-secondary" onclick="this.closest('[style*=\\'position: fixed\\']').remove()" style="flex: 1;">
+                                ✖️ Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', html);
+            showNotification(`✅ Analyzed ${data.total} leads successfully!`, 'success');
+        } else {
+            showNotification('❌ Bulk analysis failed: ' + (data.error || 'Unknown error'), 'error');
+        }
+    } catch (error) {
+        console.error('Bulk analyze error:', error);
+        showNotification('❌ Failed to analyze leads', 'error');
+    }
+}
+
     
 
 // ============================================================================
@@ -3046,6 +3138,9 @@ document.addEventListener('click', function(event) {
     <!-- Bulk Actions Bar -->
     <div id="bulk-actions-bar" class="bulk-actions-bar">
         <span class="selection-count"><span id="selected-count">0</span> selected</span>
+        <button class="bulk-action-btn" onclick="bulkAIAnalyze()" title="AI Analyze selected leads" style="background: rgba(124, 58, 237, 0.3);">
+            🤖 AI Analyze
+        </button>
         <button class="bulk-action-btn" onclick="bulkExportExcel()" title="Export selected to Excel">
             📊 Excel
         </button>
