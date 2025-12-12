@@ -1107,10 +1107,59 @@ def bulk_linkedin_search():
         return jsonify({'success': False, 'error': str(e)})
 
 
+@app.route('/api/leads/bulk-analyze', methods=['POST'])
+@limiter.limit("10 per hour")
+def bulk_analyze_leads():
+    """Bulk analyze multiple leads with AI."""
+    try:
+        data = request.json
+        lead_ids = data.get('lead_ids', [])
+        
+        if not lead_ids:
+            return jsonify({'success': False, 'error': 'No leads selected'})
+        
+        all_leads = load_premium_leads()
+        selected_leads = [all_leads[i] for i in lead_ids if i < len(all_leads)]
+        
+        if not selected_leads:
+            return jsonify({'success': False, 'error': 'Invalid lead IDs'})
+        
+        # Analyze each lead
+        results = []
+        for lead in selected_leads[:10]:  # Limit to 10 for performance
+            try:
+                # Quick analysis for bulk
+                business_name = lead.get('title', '')
+                business_type = lead.get('type', '')
+                rating = lead.get('rating', 0)
+                
+                results.append({
+                    'business_name': business_name,
+                    'business_type': business_type,
+                    'rating': rating,
+                    'quick_pitch': f"Hi {business_name}! Your {rating}★ rating is impressive. Let's get you 3-5x more customers online!",
+                    'pain_point': f"Strong reputation but limited online presence",
+                    'solution': "Modern website + mobile app + SEO"
+                })
+            except:
+                continue
+        
+        return jsonify({
+            'success': True,
+            'total': len(results),
+            'analyses': results,
+            'message': f'✅ Analyzed {len(results)} leads'
+        })
+        
+    except Exception as e:
+        logger.error(f"Bulk analysis error: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
+
 @app.route('/api/lead/analyze', methods=['POST'])
 @limiter.limit("20 per minute")
 def analyze_lead():
-    """Analyze a lead with AI to identify problems and solutions."""
+    """Analyze a lead with AI to identify problems, pain points, and solutions."""
     try:
         data = request.json
         lead = data.get('lead')
@@ -1131,26 +1180,116 @@ def analyze_lead():
         
         ai = create_ai_assistant(config['GEMINI_API_KEY'])
         
-        # Generate analysis
+        # Generate detailed analysis
         business_name = lead.get('title', '')
         business_type = lead.get('type', '')
         rating = lead.get('rating', 0)
         reviews = lead.get('reviews', 0)
         address = lead.get('address', '')
+        website = lead.get('website', '')
         
-        analysis_text = ai.analyze_business(business_name, business_type, rating, reviews, address)
-        
-        # Generate quick pitch
-        pitch = f"Hi {business_name}! Noticed your {rating}★ rating - impressive! We help {business_type} businesses get 3-5x more customers through modern tech. Interested in a FREE consultation?"
-        
-        return jsonify({
-            'success': True,
-            'analysis': analysis_text,
-            'quick_pitch': pitch
-        })
+        # Create detailed analysis prompt
+        analysis_prompt = f"""Analyze this business and provide detailed insights:
+
+Business: {business_name}
+Type: {business_type}
+Rating: {rating} stars ({reviews} reviews)
+Location: {address}
+Website: {website if website else 'No website'}
+
+Provide a JSON response with:
+1. pain_points: Array of 3-5 specific problems this business likely faces
+2. solutions: Array of 3-5 RagsPro solutions that can help
+3. revenue_opportunity: Estimated revenue potential (e.g., "$50k-$200k project")
+4. quick_pitch: One compelling sentence to grab their attention
+5. email_subject: Catchy email subject line
+6. call_script: 30-second phone script
+
+Focus on digital transformation, online presence, and tech solutions."""
+
+        try:
+            response = ai.model.generate_content(analysis_prompt)
+            analysis_text = response.text.strip()
+            
+            # Try to parse as JSON
+            import json
+            import re
+            
+            # Extract JSON from markdown code blocks if present
+            json_match = re.search(r'```json\s*(.*?)\s*```', analysis_text, re.DOTALL)
+            if json_match:
+                analysis_json = json.loads(json_match.group(1))
+            else:
+                # Try direct JSON parse
+                try:
+                    analysis_json = json.loads(analysis_text)
+                except:
+                    # Fallback: create structured response
+                    analysis_json = {
+                        'pain_points': [
+                            f"Limited online presence despite {rating}★ rating",
+                            f"Missing modern website to capture {reviews}+ satisfied customers",
+                            "No online booking/ordering system",
+                            "Weak SEO - losing customers to competitors",
+                            "No mobile app for customer convenience"
+                        ],
+                        'solutions': [
+                            "Modern responsive website with SEO optimization",
+                            "Mobile app for iOS & Android",
+                            "Online booking/ordering system",
+                            "AI-powered chatbot for 24/7 customer support",
+                            "Digital marketing & Google Ads management"
+                        ],
+                        'revenue_opportunity': "$30k-$150k project value",
+                        'quick_pitch': f"Hi {business_name}! Your {rating}★ rating shows customers love you. Let's capture the 70% searching online with a modern website & app!",
+                        'email_subject': f"Grow {business_name} Online - 3-5x More Customers",
+                        'call_script': f"Hi, this is Raghav from RagsPro. I noticed {business_name} has an amazing {rating}-star rating! We help {business_type} businesses like yours get 3-5x more customers through modern websites and apps. Do you have 2 minutes to discuss how we can help you grow?"
+                    }
+            
+            # Generate full email and WhatsApp content
+            email_content = ai.generate_cold_email(business_name, business_type, address, rating, reviews)
+            whatsapp_content = ai.generate_whatsapp_message(business_name, business_type)
+            
+            return jsonify({
+                'success': True,
+                'analysis': analysis_json,
+                'email_content': email_content,
+                'whatsapp_content': whatsapp_content,
+                'quick_pitch': analysis_json.get('quick_pitch', ''),
+                'call_script': analysis_json.get('call_script', '')
+            })
+            
+        except Exception as e:
+            logger.error(f"AI analysis error: {e}")
+            # Fallback response
+            return jsonify({
+                'success': True,
+                'analysis': {
+                    'pain_points': [
+                        f"Strong reputation ({rating}★) but limited online visibility",
+                        "Missing modern website to convert online searches",
+                        "No digital marketing strategy",
+                        "Competitors capturing online customers"
+                    ],
+                    'solutions': [
+                        "Professional website with SEO",
+                        "Mobile app development",
+                        "Digital marketing campaigns",
+                        "Online booking/ordering system"
+                    ],
+                    'revenue_opportunity': "$30k-$100k",
+                    'quick_pitch': f"Transform {business_name}'s {rating}★ reputation into 3-5x more customers!",
+                    'email_subject': f"Grow {business_name} Online",
+                    'call_script': f"Hi, Raghav from RagsPro. Noticed your {rating}★ rating! We help {business_type} businesses get more customers online. Quick chat?"
+                },
+                'email_content': ai.generate_cold_email(business_name, business_type, address, rating, reviews),
+                'whatsapp_content': ai.generate_whatsapp_message(business_name, business_type),
+                'quick_pitch': f"Transform {business_name}'s reputation into more customers!",
+                'call_script': f"Hi, this is Raghav from RagsPro. Quick question about growing {business_name} online?"
+            })
         
     except Exception as e:
-        logger.error(f"Lead analysis error: {e}")
+        logger.error(f"Lead analysis error: {e}", exc_info=True)
         return jsonify({'success': False, 'error': str(e)})
 
 

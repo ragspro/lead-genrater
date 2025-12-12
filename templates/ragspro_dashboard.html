@@ -2448,12 +2448,14 @@ async function analyzeLead(index) {
         
         if (data.success) {
             const analysis = data.analysis;
-            const pitch = data.quick_pitch;
+            const emailContent = data.email_content || '';
+            const whatsappContent = data.whatsapp_content || '';
+            const callScript = data.call_script || analysis.call_script || '';
             
-            // Create analysis modal
+            // Create enhanced analysis modal
             let html = `
                 <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px;" onclick="this.remove()">
-                    <div class="glass-card" style="max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 40px;" onclick="event.stopPropagation()">
+                    <div class="glass-card" style="max-width: 900px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 40px;" onclick="event.stopPropagation()">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
                             <h2 style="margin: 0; background: linear-gradient(135deg, #7C3AED 0%, #0EA5E9 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
                                 🔍 AI Analysis: ${lead.title}
@@ -2461,16 +2463,18 @@ async function analyzeLead(index) {
                             <button onclick="this.closest('[style*=\'position: fixed\']').remove()" style="background: none; border: none; font-size: 2em; cursor: pointer; color: #9CA3AF;">×</button>
                         </div>
                         
+                        ${analysis.quick_pitch ? `
                         <div class="info-box" style="background: rgba(124, 58, 237, 0.1); border-color: #7C3AED; margin-bottom: 20px;">
                             <strong>🎯 Quick Pitch</strong>
-                            <p style="margin-top: 10px; font-size: 1.1em;">${pitch}</p>
+                            <p style="margin-top: 10px; font-size: 1.1em;">${analysis.quick_pitch}</p>
                         </div>
+                        ` : ''}
                         
-                        ${analysis.problems && analysis.problems.length > 0 ? `
+                        ${analysis.pain_points && analysis.pain_points.length > 0 ? `
                         <div class="info-box" style="background: rgba(239, 68, 68, 0.1); border-color: #EF4444; margin-bottom: 20px;">
-                            <strong>⚠️ Problems Identified</strong>
+                            <strong>⚠️ Pain Points Identified</strong>
                             <ul style="margin-top: 10px; padding-left: 20px;">
-                                ${analysis.problems.map(p => `<li style="margin: 8px 0;">${p}</li>`).join('')}
+                                ${analysis.pain_points.map(p => `<li style="margin: 8px 0;">${p}</li>`).join('')}
                             </ul>
                         </div>
                         ` : ''}
@@ -2487,27 +2491,48 @@ async function analyzeLead(index) {
                         ${analysis.revenue_opportunity ? `
                         <div class="info-box" style="background: rgba(245, 158, 11, 0.1); border-color: #F59E0B; margin-bottom: 20px;">
                             <strong>💰 Revenue Opportunity</strong>
-                            <p style="margin-top: 10px; font-size: 1.1em; font-weight: 600;">${analysis.revenue_opportunity}</p>
+                            <p style="margin-top: 10px; font-size: 1.2em; font-weight: 600; color: #F59E0B;">${analysis.revenue_opportunity}</p>
                         </div>
                         ` : ''}
                         
-                        ${analysis.pain_points && analysis.pain_points.length > 0 ? `
+                        ${callScript ? `
                         <div class="info-box" style="background: rgba(14, 165, 233, 0.1); border-color: #0EA5E9; margin-bottom: 20px;">
-                            <strong>📊 Pain Points</strong>
-                            <ul style="margin-top: 10px; padding-left: 20px;">
-                                ${analysis.pain_points.map(pp => `<li style="margin: 8px 0;">${pp}</li>`).join('')}
-                            </ul>
+                            <strong>📞 Call Script (30 seconds)</strong>
+                            <p style="margin-top: 10px; line-height: 1.6;">${callScript}</p>
+                            <button class="btn btn-secondary" onclick="navigator.clipboard.writeText(\`${callScript.replace(/`/g, '\\`')}\`); showNotification('✅ Call script copied!', 'success');" style="margin-top: 10px; padding: 8px 16px; font-size: 0.9em;">
+                                📋 Copy Script
+                            </button>
                         </div>
                         ` : ''}
                         
-                        <div style="display: flex; gap: 12px; margin-top: 30px;">
-                            <button class="btn btn-success" onclick="sendWhatsApp(${index}); this.closest('[style*=\'position: fixed\']').remove();" style="flex: 1;">
+                        ${emailContent ? `
+                        <div class="info-box" style="background: rgba(124, 58, 237, 0.05); border-color: #7C3AED; margin-bottom: 20px;">
+                            <strong>📧 Email Content</strong>
+                            <pre style="margin-top: 10px; white-space: pre-wrap; font-family: inherit; font-size: 0.95em; line-height: 1.6; max-height: 200px; overflow-y: auto;">${emailContent}</pre>
+                            <button class="btn btn-secondary" onclick="navigator.clipboard.writeText(\`${emailContent.replace(/`/g, '\\`')}\`); showNotification('✅ Email copied!', 'success');" style="margin-top: 10px; padding: 8px 16px; font-size: 0.9em;">
+                                📋 Copy Email
+                            </button>
+                        </div>
+                        ` : ''}
+                        
+                        ${whatsappContent ? `
+                        <div class="info-box" style="background: rgba(16, 185, 129, 0.05); border-color: #10B981; margin-bottom: 20px;">
+                            <strong>💬 WhatsApp Message</strong>
+                            <pre style="margin-top: 10px; white-space: pre-wrap; font-family: inherit; font-size: 0.95em; line-height: 1.6;">${whatsappContent}</pre>
+                            <button class="btn btn-secondary" onclick="navigator.clipboard.writeText(\`${whatsappContent.replace(/`/g, '\\`')}\`); showNotification('✅ WhatsApp message copied!', 'success');" style="margin-top: 10px; padding: 8px 16px; font-size: 0.9em;">
+                                📋 Copy Message
+                            </button>
+                        </div>
+                        ` : ''}
+                        
+                        <div style="display: flex; gap: 12px; margin-top: 30px; flex-wrap: wrap;">
+                            <button class="btn btn-success" onclick="sendWhatsAppWithContent(${index}, \`${whatsappContent.replace(/`/g, '\\`').replace(/\n/g, '\\n')}\`); this.closest('[style*=\\'position: fixed\\']').remove();" style="flex: 1;">
                                 💬 Send WhatsApp
                             </button>
-                            <button class="btn btn-info" onclick="sendEmail(${index}); this.closest('[style*=\'position: fixed\']').remove();" style="flex: 1;">
+                            <button class="btn btn-info" onclick="sendEmailWithContent(${index}, \`${emailContent.replace(/`/g, '\\`').replace(/\n/g, '\\n')}\`); this.closest('[style*=\\'position: fixed\\']').remove();" style="flex: 1;">
                                 📧 Send Email
                             </button>
-                            <button class="btn btn-secondary" onclick="this.closest('[style*=\'position: fixed\']').remove()" style="flex: 1;">
+                            <button class="btn btn-secondary" onclick="this.closest('[style*=\\'position: fixed\\']').remove()" style="flex: 1;">
                                 ✖️ Close
                             </button>
                         </div>
@@ -2524,6 +2549,31 @@ async function analyzeLead(index) {
         console.error('Analyze error:', error);
         showNotification('❌ Failed to analyze lead', 'error');
     }
+}
+
+// Helper functions for sending with pre-filled content
+function sendWhatsAppWithContent(index, message) {
+    const lead = allLeads[index];
+    const phone = lead.phone || '';
+    if (!phone) {
+        showNotification('❌ No phone number available', 'error');
+        return;
+    }
+    
+    const phoneClean = phone.replace(/\D/g, '');
+    const whatsappUrl = `https://wa.me/${phoneClean}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+    showNotification('✅ WhatsApp opened!', 'success');
+}
+
+function sendEmailWithContent(index, body) {
+    const lead = allLeads[index];
+    const email = lead.email || '';
+    const subject = `Partnership Opportunity - ${lead.title}`;
+    
+    const mailtoUrl = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailtoUrl;
+    showNotification('✅ Email client opened!', 'success');
 }
 
 
