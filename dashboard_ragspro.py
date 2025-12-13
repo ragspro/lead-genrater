@@ -1325,17 +1325,22 @@ Focus on digital transformation, online presence, and tech solutions."""
 
 
 if __name__ == '__main__':
-    print("""
+    port = int(os.getenv('PORT', 5002))
+    debug = os.getenv('FLASK_ENV') != 'production'
+    env = 'PRODUCTION' if not debug else 'DEVELOPMENT'
+    
+    print(f"""
     ╔══════════════════════════════════════════════════════════╗
-    ║           RAGSPRO DASHBOARD - DARK THEME                 ║
+    ║           RAGSPRO DASHBOARD - {env:^20}           ║
     ║                                                          ║
     ║  🎯 Complete Lead Management System                      ║
     ║  💰 AI-Powered Content Generation                        ║
     ║  🚀 Real-time Lead Generation                            ║
     ╚══════════════════════════════════════════════════════════╝
     
-    🚀 Dashboard running at: http://localhost:5002
-    📊 Open your browser and start generating premium leads!
+    🚀 Dashboard running at: http://0.0.0.0:{port}
+    📊 Environment: {env}
+    🔒 Debug Mode: {'OFF' if not debug else 'ON'}
     """)
     
-    app.run(debug=True, host='0.0.0.0', port=5002)
+    app.run(debug=debug, host='0.0.0.0', port=port)
